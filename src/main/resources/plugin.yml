@@ -1,0 +1,59 @@
+name: XWhitelist
+main: org.eldrygo.XWhitelist
+version: 1.0.0
+api-version: 1.13
+commands:
+  xwhitelist:
+    description: "Comandos de whitelist"
+    subcommands:
+      add:
+        description: "Añadir un jugador a la whitelist"
+        permission-message: "No tienes permiso para añadir un jugador a la whitelist."
+      remove:
+        description: "Eliminar un jugador de la whitelist"
+        permission-message: "No tienes permiso para eliminar un jugador de la whitelist."
+      list:
+        description: "Ver la lista de la whitelist"
+        permission-message: "No tienes permiso para ver la lista de la whitelist."
+      cleanup:
+        description: "Limpiar jugadores no válidos de la whitelist"
+        permission-message: "No tienes permiso para limpiar la whitelist."
+      reload:
+        description: "Recargar la configuración y la base de datos"
+        permission-message: "No tienes permiso para recargar la configuración."
+      help:
+        description: "Obtener la lista de comandos del plugin."
+        permission-message: "No tienes permiso para obtener la lista de comandos."
+  mwhitelist:
+    description: "Comandos de whitelist de mantenimiento"
+    aliases:
+        - mwl
+    subcommands:
+      enable:
+        description: "Activa la whitelist de mantenimiento."
+        permission-message: "No tienes permiso para activar la whitelist de mantenimiento."
+      disable:
+        description: "Desactiva la whitelist de mantenimiento."
+        permission-message: "No tienes permiso para activar la whitelist de mantenimiento."
+permissions:
+  xwhitelist.add:
+    description: "Permiso para añadir jugadores a la whitelist."
+    default: op
+  xwhitelist.remove:
+    description: "Permiso para eliminar jugadores de la whitelist."
+    default: op
+  xwhitelist.list:
+    description: "Permiso para listar los jugadores de la whitelist."
+    default: op
+  xwhitelist.cleanup:
+    description: "Permiso para limpiar jugadores no válidos de la whitelist."
+    default: op
+  xwhitelist.reload:
+    description: "Permiso para recargar la configuración."
+    default: op
+  xwhitelist.admin:
+    description: "Permiso de administracion con acceso a todos los comandos."
+    default: op
+  xwhitelist.maintenance:
+    description: "Permiso para ocupar los commandos de la whitelist de mantenimiento."
+    default: op

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="XWhitelist:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="XWhitelist.jar">
+      <element id="module-output" name="XWhitelist" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/json/json/20210307/json-20210307.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

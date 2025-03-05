@@ -1,0 +1,21 @@
+# Bienvenido al archivo de configuracion de la whitelist de mantenimiento. Aqui puedes configurar el estado de la whitelist y los mensajes del plugin, además de la lista de jugadores.
+
+# Estado de la whitelist de mantenimiento. (true para activarla, false para desactivarla)
+enabled: false
+
+# Mensajes de la whitelist de mantenimiento, además de el mensaje de kick para los jugadores que intenten entrar y que no esten en esta. (player_not_whitelisted)
+messages:
+  enable: "&8[#ff50af&lM&r&lWhitelist&8] #a0ff72✔ ¡La whitelist de mantenimiento ha sido activada!"
+  disable: "&8[#ff50af&lM&r&lWhitelist&8] #ff7272❌ ¡La whitelist de mantenimiento ha sido desactivada!"
+  already_enabled: "&8[#ff50af&lM&r&lWhitelist&8] #fff18d📰 La whitelist de mantenimiento ya está activada."
+  already_disabled: "&8[#ff50af&lM&r&lWhitelist&8] #fff18d📰 La whitelist de mantenimiento ya está desactivada."
+  player_not_whitelisted: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No estás en la whitelist de mantenimiento."
+  no_permission: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No tienes permisos para usar ese comando."
+  unknown_command: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 Comando desconocido. &7Usa &f/xwhitelist help &7para ver la lista de comandos."
+  no_additional_arguments: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No se necesitan argumentos en este comando."
+
+# Lista de jugadores en la whitelist de mantenimiento.
+whitelist:
+  - player1
+  - player2
+  - player3
