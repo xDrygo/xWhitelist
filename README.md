@@ -10,7 +10,7 @@ xWhitelist is a plugin that adds a whitelist system based on a MySQL database, a
 - Permissions and commands for administration.
 
 ## Commands
-List of all commands from the plugin. (All the commands can be  used from the console.)  
+List of all commands from the plugin. (All the commands can be  used from the console.)
 
 **Plugin** commands are the general commands that no manage the plugin, not a whitelist.  
 **Regular Whitelist** commands manage the regular MySQL whitelist.  
@@ -47,6 +47,12 @@ List of all commands from the plugin. (All the commands can be  used from the co
 ### All permissions
 - **xwhitelist.admin** » Permission for all. _(* permission)_
 
+## Placeholders
+(These placeholders needs PlaceholderAPI to work.)
+- **%xwhitelist_whitelist_iswhitelisted%** » Returns "true" if the player is whitelisted, otherwise "false".
+- **%xwhitelist_whitelist_playerswhitelisted%** » Returns the number of players in the whitelist.
+- **%xwhitelist_maintenance_status%** » Returns "enabled" if the maintenance whitelist is enabled, otherwise "disabled".
+- **%xwhitelist_maintenance_iswhitelisted%** » Returns "true" if the player is whitelisted in the maintenance whitelist, otherwise "false".
 ## Configuration Files
 ### [config.yml](https://github.com/xDrygo/xWhitelist/blob/master/src/main/resources/config.yml)
 ```
