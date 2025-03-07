@@ -1,20 +1,31 @@
-# Bienvenido al archivo de configuracion de la whitelist de mantenimiento. Aqui puedes configurar el estado de la whitelist y los mensajes del plugin, además de la lista de jugadores.
 
-# Estado de la whitelist de mantenimiento. (true para activarla, false para desactivarla)
+#                  /$$      /$$ /$$       /$$   /$$               /$$ /$$             /$$
+#                 | $$  /$ | $$| $$      |__/  | $$              | $$|__/            | $$
+#    /$$$$$$/$$$$ | $$ /$$$| $$| $$$$$$$  /$$ /$$$$$$    /$$$$$$ | $$ /$$  /$$$$$$$ /$$$$$$
+#   | $$_  $$_  $$| $$/$$ $$ $$| $$__  $$| $$|_  $$_/   /$$__  $$| $$| $$ /$$_____/|_  $$_/
+#   | $$ \ $$ \ $$| $$$$_  $$$$| $$  \ $$| $$  | $$    | $$$$$$$$| $$| $$|  $$$$$$   | $$
+#   | $$ | $$ | $$| $$$/ \  $$$| $$  | $$| $$  | $$ /$$| $$_____/| $$| $$ \____  $$  | $$ /$$
+#   | $$ | $$ | $$| $$/   \  $$| $$  | $$| $$  |  $$$$/|  $$$$$$$| $$| $$ /$$$$$$$/  |  $$$$/
+#   |__/ |__/ |__/|__/     \__/|__/  |__/|__/   \___/   \_______/|__/|__/|_______/    \___/   by Drygo
+#                                 Maintenance Whitelist Feature.
+
+# Welcome to the maintenance whitelist configuration file. Here you can configure the whitelist status and plugin messages, as well as the player list.
+
+# Status of the maintenance whitelist. (true to activate it, false to deactivate it)
 enabled: false
 
-# Mensajes de la whitelist de mantenimiento, además de el mensaje de kick para los jugadores que intenten entrar y que no esten en esta. (player_not_whitelisted)
+# Maintenance whitelist messages, with the kick message for players trying to join who are not on the whitelist. (player_not_whitelisted)
 messages:
-  enable: "&8[#ff50af&lM&r&lWhitelist&8] #a0ff72✔ ¡La whitelist de mantenimiento ha sido activada!"
-  disable: "&8[#ff50af&lM&r&lWhitelist&8] #ff7272❌ ¡La whitelist de mantenimiento ha sido desactivada!"
-  already_enabled: "&8[#ff50af&lM&r&lWhitelist&8] #fff18d📰 La whitelist de mantenimiento ya está activada."
-  already_disabled: "&8[#ff50af&lM&r&lWhitelist&8] #fff18d📰 La whitelist de mantenimiento ya está desactivada."
-  player_not_whitelisted: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No estás en la whitelist de mantenimiento."
-  no_permission: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No tienes permisos para usar ese comando."
-  unknown_command: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 Comando desconocido. &7Usa &f/xwhitelist help &7para ver la lista de comandos."
-  no_additional_arguments: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No se necesitan argumentos en este comando."
+  enable: "&8[#ff50af&lM&r&lWhitelist&8] #a0ff72✔ The maintenance whitelist has been enabled."
+  disable: "&8[#ff50af&lM&r&lWhitelist&8] #ff7272❌ The maintenance whitelist has been disabled."
+  already_enabled: "&8[#ff50af&lM&r&lWhitelist&8] #fff18d📰 The maintenance whitelist is already enabled."
+  already_disabled: "&8[#ff50af&lM&r&lWhitelist&8] #fff18d📰 The maintenance whitelist is already disabled."
+  player_not_whitelisted: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 You are not on the maintenance whitelist."
+  no_permission: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 You don't have permissions."
+  unknown_command: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 Unknown command. &7Use &f/xwhitelist help &7to see the list of commands."
+  no_additional_arguments: "&8[#ff50af&lM&r&lWhitelist&8] #FF0000🚫 No arguments are needed in this command."
 
-# Lista de jugadores en la whitelist de mantenimiento.
+# List of players on the maintenance whitelist.
 whitelist:
   - player1
   - player2

@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eldrygo.MWhitelist.MWhitelist;
 import org.eldrygo.MWhitelist.MWhitelistCommand;
+import org.eldrygo.placeholders.XWhitelistExpansion;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class XWhitelist extends JavaPlugin implements Listener {
     private File maintenanceWhitelistFile;
     private FileConfiguration maintenanceWhitelistConfig;
     private MWhitelist mWhitelist;
+    private boolean workingPlaceholderAPI = false;
 
     @Override
     public void onEnable() {
@@ -36,7 +38,6 @@ public class XWhitelist extends JavaPlugin implements Listener {
         mWhitelist = new MWhitelist(this);
 
 
-        // Cargar los valores de la configuración principal
         host = config.getString("mysql.host");
         port = config.getInt("mysql.port");
         database = config.getString("mysql.database");
@@ -53,34 +54,53 @@ public class XWhitelist extends JavaPlugin implements Listener {
 
         connectToDatabase();
         createTableIfNotExists();
+        loadPlaceholderAPI();
 
-        // Registrar eventos
+        // Register events
         getServer().getPluginManager().registerEvents(new PlayerLoginListener(this), this);
 
-        // Registrar el comando
+        // Register commands
         loadCommands();
 
-        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #a0ff72se ha encendido! &fVersion: " + version));
-        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #fff18dGracias por usar mi plugin! - Drygo"));
+        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #a0ff72has been enabled! &fVersion: " + version));
+        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #fff18dThanks for use my plugin! - Drygo"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#666666+====================================================================+"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("&8                             [#ff0000&lX&r&lWhitelist&8]"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18d                Thank you for using XWhitelist plugin!"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18d   You can find all the commands and permission from the plugin in"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dthe README.md of the github repository, you can find it in config.yml"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#ffffff  If you have any questions or suggestions, please contact me on X!"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#666666+====================================================================+"));
     }
 
     public void connectToDatabase() {
         try {
-            log.info("Intentando conectar a la base de datos...");
+            log.info("Trying to connect with database...");
             connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-            log.info("✅ Conectado a la base de datos MySQL.");
+            log.info("✅ Connected with MySQL database.");
         } catch (SQLException e) {
-            log.severe("❌ Error conectando a MySQL: " + e.getMessage());
+            log.severe("❌ MySQL connection error: " + e.getMessage());
         }
+    }
+    private void loadPlaceholderAPI() {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new XWhitelistExpansion(this).register();
+            log.info("✅ PlaceholderAPI detected. Placeholders will work.");
+            workingPlaceholderAPI = true;
+        } else {
+            log.warning("⚠ PlaceholderAPI not detected. Placeholders will not work.");
+        }}
+    public boolean isPlaceholderAPIEnabled() {
+        return workingPlaceholderAPI;
     }
     private void loadCommands() {
         getCommand("xwhitelist").setExecutor(new XWhitelistCommand(this));
         if (getCommand("xwhitelist") == null) {
-            getLogger().severe("❌ Error: El comando xwhitelist no está registrado en plugin.yml");
+            getLogger().severe("❌ Error: xWhitelist command is no registered in plugin.yml");
         }
         getCommand("mwhitelist").setExecutor(new MWhitelistCommand(this, mWhitelist));
         if (getCommand("mwhitelist") == null) {
-            getLogger().severe("❌ Error: El comando mwhitelist no está registrado en plugin.yml");
+            getLogger().severe("❌ Error: mWhitelist command is no registered in plugin.yml");
         }
     }
 
@@ -91,9 +111,9 @@ public class XWhitelist extends JavaPlugin implements Listener {
                     "username VARCHAR(16) NOT NULL UNIQUE, " +
                     "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ");");
-            log.info("✅ Tabla 'whitelist' verificada en la base de datos.");
+            log.info("✅ 'whitelist' table verified in the database.");
         } catch (SQLException e) {
-            log.severe("❌ Error al crear la tabla en MySQL: " + e.getMessage());
+            log.severe("❌ Error creating table in MySQL: " + e.getMessage());
         }
     }
     public MWhitelist getMWhitelist() {
@@ -105,13 +125,13 @@ public class XWhitelist extends JavaPlugin implements Listener {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                log.info("📴 Desconectado de la base de datos.");
+                log.info("📴 Disconnected from database.");
             }
         } catch (SQLException e) {
-            log.severe("❌ Error cerrando conexión MySQL: " + e.getMessage());
+            log.severe("❌ Error closing MySQL connection: " + e.getMessage());
         }
-        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #ff7272se ha apagado! &fVersion: " + version));
-        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #fff18dGracias por usar mi plugin! - Drygo"));
+        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #ff7272has been disabled! &fVersion: " + version));
+        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("&8[#ff0000&lX&r&lWhitelist&8] #fff18dThanks for use my plugin! - Drygo"));
     }
 
     public Connection getConnection() {
@@ -123,52 +143,56 @@ public class XWhitelist extends JavaPlugin implements Listener {
     }
 
     private void onFirstRun() {
-        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#666666+======================================================+"));
-        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("&8                   [#ff0000&lX&r&lWhitelist&8]"));
-        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dHola! Al ser este el primer inicio de XWhitelist, el plugin"));
-        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dse ha desactivado al no tener una base de datos configurada."));
-        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#ffffffFavor de configurar la base de datos en el archivo config.yml"));
-        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#666666+======================================================+"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#666666+==============================================================+"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("&8                      [#ff0000&lX&r&lWhitelist&8]"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dHello! Since this is the first time I've started XWhitelist, the"));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dplugin has been disabled due to not having a database configured."));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#ffffffPlease configure the database in the config.yml file and restart."));
+        getServer().getConsoleSender().sendMessage(ChatUtils.formatColor("#666666+==============================================================+"));
     }
 
-    // Cargar y manejar el archivo maintenance-whitelist.yml
+    // Load and manage the maintenance-whitelist.yml file
     public void loadMaintenanceWhitelist() {
         maintenanceWhitelistFile = new File(getDataFolder(), "maintenance_whitelist.yml");
 
         if (!maintenanceWhitelistFile.exists()) {
             saveResource("maintenance_whitelist.yml", false);
-            getLogger().info("✅ El archivo maintenance_whitelist.yml no existía, se ha creado.");
+            getLogger().info("✅ The maintenance_whitelist.yml file did not exist, it has been created.");
         } else {
-            getLogger().info("✅ El archivo maintenance_whitelist.yml se ha cargado correctamente.");
+            getLogger().info("✅ The maintenance_whitelist.yml file has been loaded successfully.");
         }
 
         maintenanceWhitelistConfig = YamlConfiguration.loadConfiguration(maintenanceWhitelistFile);
     }
+    public void reloadMaintenanceWhitelist() {
+        maintenanceWhitelistConfig = YamlConfiguration.loadConfiguration(maintenanceWhitelistFile);
+        getLogger().info("🔄 maintenance-whitelist.yml was reloaded successfully.");
+    }
 
-    // Método para obtener la configuración de la whitelist de mantenimiento
+    // Method to obtain the maintenance whitelist configuration
     public FileConfiguration getMaintenanceWhitelistConfig() {
         return maintenanceWhitelistConfig;
     }
 
-    // Guardar cambios en el archivo maintenance-whitelist.yml
+    // Save changes to the maintenance-whitelist.yml file
     public void saveMaintenanceWhitelist() {
         try {
             maintenanceWhitelistConfig.save(maintenanceWhitelistFile);
-            getLogger().info("✅ maintenance_whitelist.yml guardado correctamente.");
+            getLogger().info("✅ maintenance_whitelist.yml saved successfully.");
         } catch (IOException e) {
-            getLogger().severe("❌ No se pudo guardar maintenance_whitelist.yml: " + e.getMessage());
+            getLogger().severe("❌ Failed to save maintenance_whitelist.yml: " + e.getMessage());
         }
     }
 
-    // Recargar la configuración, incluida la whitelist de mantenimiento
+    // Reload configuration, including maintenance whitelist
     public void reloadPluginConfig() {
-        // Recargar la configuración principal
+        // Reload main configuration
         super.reloadConfig();
         this.config = getConfig();
 
-        // Recargar la whitelist de mantenimiento
+        // Reload the maintenance whitelist configuration
         loadMaintenanceWhitelist();
 
-        getLogger().info("✅ La configuración ha sido recargada.");
+        getLogger().info("✅ The configuration has been reloaded.");
     }
 }

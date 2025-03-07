@@ -18,50 +18,42 @@ public class MWhitelistCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        plugin.getLogger().info("[DEBUG] Comando ejecutado por: " + sender.getName());
-
         if (args.length < 1) {
-            plugin.getLogger().info("[DEBUG] No se proporcionaron argumentos.");
             sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.unknown_command")));
             return true;
         }
 
-        if (!sender.hasPermission("xwhitelist.maintenance")) {
-            plugin.getLogger().info("[DEBUG] El usuario " + sender.getName() + " no tiene permisos.");
-            sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.no_permission")));
-            return true;
-        }
-
         String action = args[0].toLowerCase();
-        plugin.getLogger().info("[DEBUG] Acción recibida: " + action);
 
-        switch (action) {
-            case "enable":
+        if (args[0].equalsIgnoreCase("enable")) {
+            if (sender.hasPermission("xwhitelist.maintenance.enable") || sender.hasPermission("xwhitelist.admin")) {
                 if (!mWhitelist.isMaintenanceWhitelistActive()) {
-                    plugin.getLogger().info("[DEBUG] Activando MWhitelist...");
                     mWhitelist.toggleMaintenanceWhitelist();
+                    plugin.reloadMaintenanceWhitelist();
                     sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.enable")));
                 } else {
-                    plugin.getLogger().info("[DEBUG] La MWhitelist ya estaba activada.");
                     sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.already_enabled")));
                 }
                 return true;
+            } else {
+                sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.no_permission")));
+                return true;
+            }
+        }
 
-            case "disable":
+        if (args[0].equalsIgnoreCase("disable")) {
+            if (sender.hasPermission("xwhitelist.maintenance.disable") || sender.hasPermission("xwhitelist.admin")) {
                 if (mWhitelist.isMaintenanceWhitelistActive()) {
-                    plugin.getLogger().info("[DEBUG] Desactivando MWhitelist...");
                     mWhitelist.toggleMaintenanceWhitelist();
+                    plugin.reloadMaintenanceWhitelist();
                     sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.disable")));
                 } else {
-                    plugin.getLogger().info("[DEBUG] La MWhitelist ya estaba desactivada.");
                     sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.already_disabled")));
                 }
                 return true;
-
-            default:
-                plugin.getLogger().info("[DEBUG] Comando desconocido: " + action);
-                sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.unknown_command")));
-                return true;
+            }
         }
+        sender.sendMessage(ChatUtils.formatColor(plugin.getMaintenanceWhitelistConfig().getString("messages.unknown_command")));
+        return true;
     }
 }

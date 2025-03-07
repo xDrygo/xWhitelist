@@ -19,47 +19,41 @@ public class MWhitelist {
         loadConfig();
     }
 
-    // Cargar la configuración desde el archivo maintenance-whitelist.yml
     public void loadConfig() {
         if (!configFile.exists()) {
-            plugin.saveResource("maintenance_whitelist.yml", false); // Si el archivo no existe, crear el archivo
+            plugin.saveResource("maintenance_whitelist.yml", false);
         }
         config = YamlConfiguration.loadConfiguration(configFile);
     }
 
-    // Obtener el estado de la whitelist de mantenimiento (activada o desactivada)
     public boolean isMaintenanceWhitelistActive() {
         return config.getBoolean("enabled", false);
     }
-
-    // Cambiar el estado de la whitelist de mantenimiento (activar o desactivar)
     public void toggleMaintenanceWhitelist() {
-        boolean currentState = isMaintenanceWhitelistActive();
-        config.set("enabled", !currentState); // Cambiar el valor a lo contrario
+        boolean currentStatus = config.getBoolean("enabled", false);
+        config.set("enabled", !currentStatus);
         saveConfig();
+        loadConfig(); // Recarga la configuración para asegurarse de que el cambio se refleje
+        plugin.getLogger().info("🔄 Maintenance whitelist set to: " + !currentStatus);
     }
 
-    // Obtener la lista de jugadores en la whitelist de mantenimiento
     public List<String> getMaintenanceWhitelist() {
         return config.getStringList("whitelist");
     }
 
-    // Comprobar si el jugador está en la whitelist de mantenimiento
     public boolean isPlayerInMaintenanceWhitelist(String playerName) {
         return getMaintenanceWhitelist().contains(playerName);
     }
 
-    // Guardar los cambios en el archivo maintenance-whitelist.yml
     public void saveConfig() {
         try {
             config.save(configFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Error al guardar la configuración: " + e.getMessage());
+            plugin.getLogger().severe("Error on saving the config: " + e.getMessage());
         }
     }
 
-    // Obtener un mensaje del archivo de configuración
     public String getMessage(String messageKey) {
-        return config.getString("messages." + messageKey, "Mensaje no encontrado.");
+        return config.getString("messages." + messageKey, "Message not found.");
     }
 }

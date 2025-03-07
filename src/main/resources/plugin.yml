@@ -1,59 +1,57 @@
 name: XWhitelist
 main: org.eldrygo.XWhitelist
-version: 1.0.0
+version: 1.1.0
 api-version: 1.13
+softdepend: [PlaceholderAPI]
 commands:
   xwhitelist:
-    description: "Comandos de whitelist"
+    description: "Whitelist commands"
+    aliases:
+        - xwl
     subcommands:
       add:
-        description: "Añadir un jugador a la whitelist"
-        permission-message: "No tienes permiso para añadir un jugador a la whitelist."
+        description: "Add a player to the whitelist."
       remove:
-        description: "Eliminar un jugador de la whitelist"
-        permission-message: "No tienes permiso para eliminar un jugador de la whitelist."
+        description: "Remove a player from the whitelist."
       list:
-        description: "Ver la lista de la whitelist"
-        permission-message: "No tienes permiso para ver la lista de la whitelist."
+        description: "List the players in the whitelist."
       cleanup:
-        description: "Limpiar jugadores no válidos de la whitelist"
-        permission-message: "No tienes permiso para limpiar la whitelist."
+        description: "Clean the whitelist."
       reload:
-        description: "Recargar la configuración y la base de datos"
-        permission-message: "No tienes permiso para recargar la configuración."
+        description: "Reload the configuration."
       help:
-        description: "Obtener la lista de comandos del plugin."
-        permission-message: "No tienes permiso para obtener la lista de comandos."
+        description: "Show the command list."
   mwhitelist:
-    description: "Comandos de whitelist de mantenimiento"
+    description: "Maintenance whitelist commands."
     aliases:
         - mwl
     subcommands:
       enable:
-        description: "Activa la whitelist de mantenimiento."
-        permission-message: "No tienes permiso para activar la whitelist de mantenimiento."
+        description: "Enable the maintenance whitelist."
       disable:
-        description: "Desactiva la whitelist de mantenimiento."
-        permission-message: "No tienes permiso para activar la whitelist de mantenimiento."
+        description: "Disable the maintenance whitelist."
 permissions:
-  xwhitelist.add:
-    description: "Permiso para añadir jugadores a la whitelist."
-    default: op
-  xwhitelist.remove:
-    description: "Permiso para eliminar jugadores de la whitelist."
-    default: op
-  xwhitelist.list:
-    description: "Permiso para listar los jugadores de la whitelist."
-    default: op
-  xwhitelist.cleanup:
-    description: "Permiso para limpiar jugadores no válidos de la whitelist."
-    default: op
-  xwhitelist.reload:
-    description: "Permiso para recargar la configuración."
-    default: op
   xwhitelist.admin:
-    description: "Permiso de administracion con acceso a todos los comandos."
-    default: op
+    description: "Access to all plugin commands."
+    default: false
+  xwhitelist.whitelist:
+    description: "Access to the whitelist commands."
+    default: false
+    children:
+      xwhitelist.whitelist.add: true
+      xwhitelist.whitelist.remove: true
+      xwhitelist.whitelist.list: true
+      xwhitelist.whitelist.cleanup: true
+  xwhitelist.plugin:
+    description: "Access to the plugin commands."
+    default: false
+    children:
+      xwhitelist.plugin.reload: true
+      xwhitelist.plugin.help: true
+      xwhitelist.plugin.info: true
   xwhitelist.maintenance:
-    description: "Permiso para ocupar los commandos de la whitelist de mantenimiento."
-    default: op
+    description: "Access to the maintenance whitelist commands."
+    default: false
+    children:
+      xwhitelist.maintenance.enable: true
+      xwhitelist.maintenance.disable: true
