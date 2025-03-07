@@ -48,7 +48,7 @@ List of all commands from the plugin. (All the commands can be  used from the co
 - **xwhitelist.admin** » Permission for all. _(* permission)_
 
 ## Placeholders
-(These placeholders needs PlaceholderAPI to work.)
+*(These placeholders needs PlaceholderAPI to work.)*
 - **%xwhitelist_whitelist_iswhitelisted%** » Returns "true" if the player is whitelisted, otherwise "false".
 - **%xwhitelist_whitelist_playerswhitelisted%** » Returns the number of players in the whitelist.
 - **%xwhitelist_maintenance_status%** » Returns "enabled" if the maintenance whitelist is enabled, otherwise "disabled".
