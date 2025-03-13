@@ -11,7 +11,7 @@ public class MWhitelist {
 
     private JavaPlugin plugin;
     private File configFile;
-    private YamlConfiguration config;
+    private static YamlConfiguration config;
 
     public MWhitelist(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -29,11 +29,14 @@ public class MWhitelist {
     public boolean isMaintenanceWhitelistActive() {
         return config.getBoolean("enabled", false);
     }
+    public static YamlConfiguration getConfig() {
+        return config;
+    }
     public void toggleMaintenanceWhitelist() {
         boolean currentStatus = config.getBoolean("enabled", false);
         config.set("enabled", !currentStatus);
         saveConfig();
-        loadConfig(); // Recarga la configuración para asegurarse de que el cambio se refleje
+        loadConfig();
         plugin.getLogger().info("🔄 Maintenance whitelist set to: " + !currentStatus);
     }
 
@@ -51,9 +54,5 @@ public class MWhitelist {
         } catch (IOException e) {
             plugin.getLogger().severe("Error on saving the config: " + e.getMessage());
         }
-    }
-
-    public String getMessage(String messageKey) {
-        return config.getString("messages." + messageKey, "Message not found.");
     }
 }

@@ -1,6 +1,6 @@
-name: XWhitelist
+name: xWhitelist
 main: org.eldrygo.XWhitelist
-version: 1.1.0
+version: 1.2.0
 api-version: 1.13
 softdepend: [PlaceholderAPI]
 commands:
@@ -9,6 +9,10 @@ commands:
     aliases:
         - xwl
     subcommands:
+      enable:
+        description: "Enable the whitelist."
+      disable:
+        description: "Disable the whitelist."
       add:
         description: "Add a player to the whitelist."
       remove:
@@ -21,15 +25,23 @@ commands:
         description: "Reload the configuration."
       help:
         description: "Show the command list."
-  mwhitelist:
-    description: "Maintenance whitelist commands."
-    aliases:
-        - mwl
-    subcommands:
-      enable:
-        description: "Enable the maintenance whitelist."
-      disable:
-        description: "Disable the maintenance whitelist."
+      info:
+        description: "Display plugin information."
+      maintenance:
+        description: "Sub command to all the maintenance whitelist management commands."
+        subcommands:
+          enable:
+            description: "Enable the maintenance whitelist."
+          disable:
+            description: "Disable the maintenance whitelist."
+          add:
+            description: "Add a player to the maintenance whitelist."
+          remove:
+            description: "Remove a player from the maintenance whitelist."
+          list:
+            description: "List the players in the maintenance whitelist."
+          cleanup:
+            description: "Clean the maintenance whitelist."
 permissions:
   xwhitelist.admin:
     description: "Access to all plugin commands."
@@ -38,6 +50,8 @@ permissions:
     description: "Access to the whitelist commands."
     default: false
     children:
+      xwhitelist.whitelist.enable: true
+      xwhitelist.whitelist.disable: true
       xwhitelist.whitelist.add: true
       xwhitelist.whitelist.remove: true
       xwhitelist.whitelist.list: true
@@ -55,3 +69,7 @@ permissions:
     children:
       xwhitelist.maintenance.enable: true
       xwhitelist.maintenance.disable: true
+      xwhitelist.maintenance.add: true
+      xwhitelist.maintenance.remove: true
+      xwhitelist.maintenance.list: true
+      xwhitelist.maintenance.cleanup: true

@@ -1,0 +1,118 @@
+
+#     /$$      /$$
+#    | $$$    /$$$
+#    | $$$$  /$$$$  /$$$$$$   /$$$$$$$ /$$$$$$$  /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$$
+#    | $$ $$/$$ $$ /$$__  $$ /$$_____//$$_____/ |____  $$ /$$__  $$ /$$__  $$ /$$_____/
+#    | $$  $$$| $$| $$$$$$$$|  $$$$$$|  $$$$$$   /$$$$$$$| $$  \ $$| $$$$$$$$|  $$$$$$
+#    | $$\  $ | $$| $$_____/ \____  $$\____  $$ /$$__  $$| $$  | $$| $$_____/ \____  $$
+#    | $$ \/  | $$|  $$$$$$$ /$$$$$$$//$$$$$$$/|  $$$$$$$|  $$$$$$$|  $$$$$$$ /$$$$$$$/
+#    |__/     |__/ \_______/|_______/|_______/  \_______/ \____  $$ \_______/|_______/  by Drygo
+#                                                         /$$  \ $$
+#             xWhitelist plugin's message config.        |  $$$$$$/
+#                                                         \______/
+
+# Welcome to the messages configuration file. Here you can change every in-game message of the plugin, prefix and kick messages.
+
+# Changes the prefix of the plugin, you can call it typing %prefix% in the messages. (Default: "#ff0000&lx&r&lWhitelist &8»&r")
+prefix: "#ff0000&lx&r&lWhitelist &8»&r"
+
+# The messages that displays when a player tries to log in on the server and is not on the whitelist.
+kick_messages:
+  whitelist:
+    - "%prefix%"
+    - ""
+    - "#FF0000🚫 You are not in the server whitelist."
+    - ""
+    - "&7If you think this is an mistake,"
+    - "&7contact us on discord.myserver.net"
+  maintenance:
+    - "%prefix%"
+    - ""
+    - "#FF0000🚫 You are not in the maintenance whitelist."
+    - ""
+    - "&7If you think this is an mistake,"
+    - "&7contact us on discord.myserver.net"
+
+# The messages that the command sender get after using a command.
+commands:
+  plugin:
+    unknown_command: "%prefix% #FF0000🚫 Unknown command. &7Use &f/xwhitelist help &7to see the list of commands."
+    reload_success: "%prefix% #a0ff72✔ Plugin reloaded."
+  whitelist:
+    enable:
+      success: "%prefix% #a0ff72✔ The whitelist has been enabled."
+      already: "%prefix% #fff18d📰 The whitelist is already enabled."
+    disable:
+      success: "%prefix% #ff7272❌ The whitelist has been disabled."
+      already: "%prefix% #fff18d📰 The whitelist is already disabled."
+    add:
+      success: "%prefix% #a0ff72✔ Added player %player% to the whitelist."
+      already: "%prefix% #FF0000🚫 The player %player% is already in the whitelist."
+      usage: "%prefix% #FF0000🚫 Incorrect usage. &7Use &f/xwhitelist add <player> &7to add a player to the whitelist."
+    remove:
+      success: "%prefix% #ff7272❌ Removed player %player% from the whitelist."
+      already: "%prefix% #FF0000🚫 Can't find player %player% in the whitelist."
+      usage: "%prefix% #FF0000🚫 Incorrect usage. &7Use &f/xwhitelist remove <player> &7to remove a player from the whitelist."
+    list:
+      header: "%prefix% #fff18d📰 List of player in the whitelist:"
+      row: "&8- #ffffff%player%"
+      empty: "%prefix% #FF0000🚫 The whitelist is empty."
+    cleanup:
+      success: "%prefix% #a0ff72✔ The whitelist has been cleared."
+  maintenance:
+    enable:
+      success: "%prefix% #a0ff72✔ The maintenance whitelist has been enabled."
+      already: "%prefix% #fff18d📰 The maintenance whitelist is already enabled."
+    disable:
+      success: "%prefix% #ff7272❌ The maintenance whitelist has been disabled."
+      already: "%prefix% #fff18d📰 The maintenance whitelist is already disabled."
+    add:
+      success: "%prefix% #a0ff72✔ Added player %player% to the MWhitelist."
+      already: "%prefix% #FF0000🚫 The player %player% is already in MWhitelist."
+      usage: "%prefix% #FF0000🚫 Incorrect usage. &7Use &f/xwhitelist maintenance add <player> &7to add a player to the MWhitelist."
+    remove:
+      success: "%prefix% #ff7272❌ Removed player %player% from the MWhitelist."
+      already: "%prefix% #FF0000🚫 Can't find player %player% in the MWhitelist."
+      usage: "%prefix% #FF0000🚫 Incorrect usage. &7Use &f/xwhitelist maintenance remove <player> &7to remove a player from the MWhitelist."
+    list:
+      header: "%prefix% #fff18d📰 List of player in the MWhitelist:"
+      row: "&8- #ffffff%player%"
+      empty: "%prefix% #FF0000🚫 The MWhitelist is empty."
+    cleanup:
+      success: "%prefix% #a0ff72✔ The whitelist has been cleared."
+
+# Help command message. (You can get it when using /xwhitelist help)
+help_message:
+  - " "
+  - " "
+  - "                            #ff0000&lX&r&lWhitelist &8» &r&fHelp"
+  - " "
+  - "#fff18d&l                    ᴘʟᴜɢɪɴ ᴄᴏᴍᴍᴀɴᴅꜱ"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ʜᴇʟᴘ #707070» #ccccccShows this help message"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ʀᴇʟᴏᴀᴅ #707070» #ccccccReloads the plugin configuration"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ɪɴꜰᴏ #707070» #ccccccDisplays information about the plugin."
+  - " "
+  - "                     #fff18d&lᴡʜɪᴛᴇʟɪꜱᴛ ᴄᴏᴍᴍᴀɴᴅꜱ"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴇɴᴀʙʟᴇ #707070» #ccccccEnables the whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴅɪꜱᴀʙʟᴇ #707070» #ccccccDisables the whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴀᴅᴅ #707070» #ccccccAdd a player to the whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ʀᴇᴍᴏᴠᴇ #707070» #ccccccRemove a player from the whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ʟɪꜱᴛ #707070» #ccccccDisplays the players in the whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴄʟᴇᴀɴᴜᴘ #707070» #ccccccRemoves all players from the whitelist"
+  - " "
+  - "                 #fff18d&lᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴡʜɪᴛᴇʟɪꜱᴛ ᴄᴏᴍᴍᴀɴᴅꜱ"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴇɴᴀʙʟᴇ #707070» #ccccccEnables the maintenance whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴅɪꜱᴀʙʟᴇ #707070» #ccccccDisables the maintenance whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴀᴅᴅ #707070» #ccccccAdd a player to the maintenance whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ʀᴇᴍᴏᴠᴇ #707070» #ccccccRemove a player from the maintenance whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ʟɪꜱᴛ #707070» #ccccccDisplays the players in the maintenance whitelist"
+  - "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴄʟᴇᴀɴᴜᴘ #707070» #ccccccRemoves all players from the maintenance whitelist"
+  - " "
+  - " "
+
+# Command error messages.
+error:
+  no_permission: "%prefix% #FF0000🚫 You have no permission to use this command."
+  database_exception: "%prefix% #FF0000🚫 Database connection error."
+
+# This is the end of the file.

@@ -6,34 +6,23 @@
 #    \  $$$$/ | $$$$_  $$$$| $$  \ $$| $$  | $$    | $$$$$$$$| $$| $$|  $$$$$$   | $$
 #     >$$  $$ | $$$/ \  $$$| $$  | $$| $$  | $$ /$$| $$_____/| $$| $$ \____  $$  | $$ /$$
 #    /$$/\  $$| $$/   \  $$| $$  | $$| $$  |  $$$$/|  $$$$$$$| $$| $$ /$$$$$$$/  |  $$$$/
-#    |__/  \__/|__/     \__/|__/  |__/|__/   \___/   \_______/|__/|__/|_______/    \___/  by Drygo
+#   |__/  \__/|__/     \__/|__/  |__/|__/   \___/   \_______/|__/|__/|_______/    \___/  by Drygo
 
-        #Github page: https://github.com/xDrygo/xWhitelist - X: https://x.com/eldrygo
+#        Github page: https://github.com/xDrygo/xWhitelist - X: https://x.com/eldrygo
 
-# Welcome to the configuration file of the plugin XWhitelist.
+# Welcome to the configuration file of the plugin xWhitelist.
 
-# MySQL database connection. You can modify the connection to the database here.
+# If is enabled the whitelist (true/false), it can be changed in-game with command /xwhitelist enable and /xwhitelist disable.
+enabled: false
+
+# MySQL database connection. You can modify the connection to the database here. (The database table that will be used is: whitelist)
 mysql:
-  host: "localhost"
+  enable: false # Use the database connection instead offline mode (true / false)
+  host: "localhost" # Example: 111.111.111.111 (WITHOUT PORT)
   port: 3306
-  database: "whitelist_database"
-  user: "root"
-  password: "password"
-
-# Plugin messages. You can modify the messages of the plugin here.
-messages:
-  player_not_whitelisted: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 You are not in the whitelist."
-  player_added: "&8[#ff0000&lX&r&lWhitelist&8] #a0ff72✔ Added player %player% to the whitelist."
-  player_removed: "&8[#ff0000&lX&r&lWhitelist&8] #ff7272❌ Removed player %player% from the whitelist."
-  whitelist_header: "&8[#ff0000&lX&r&lWhitelist&8] #fff18d📰 List of player in the whitelist:"
-  whitelist_cleaned: "&8[#ff0000&lX&r&lWhitelist&8] #a0ff72✔ The whitelist has been cleared."
-  config_reloaded: "&8[#ff0000&lX&r&lWhitelist&8] #a0ff72✔ Plugin reloaded."
-  already_whitelisted: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 The player %player% is already in the whitelist."
-  player_argument_needed: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 You need to specify a player in the command."
-  no_additional_arguments: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 No argument needed in this command."
-  unknown_command: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 Unknown command. &7Use &f/xwhitelist help &7to see the command list."
-  no_permission: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 You have no permission to use this command."
-  error_database: "&8[#ff0000&lX&r&lWhitelist&8] #FF0000🚫 Database connection error."
+  database: "whitelist_database" # Database name
+  user: "root" # Database username
+  password: "password" #Database password.
 
 # NO DOT MODIFY
 plugin:
