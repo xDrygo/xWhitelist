@@ -1,24 +1,29 @@
-package org.eldrygo;
+package org.eldrygo.Handlers;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
-import org.eldrygo.MWhitelist.MWhitelist;
+import org.eldrygo.Managers.ConfigManager;
+import org.eldrygo.Managers.MWhitelistManager;
+import org.eldrygo.XWhitelist;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class XWhitelistTabCompleter implements TabCompleter {
 
-    private XWhitelist plugin;
+    private final XWhitelist plugin;
+    private final ConfigManager configManager;
 
-    public XWhitelistTabCompleter(XWhitelist plugin) {
+    public XWhitelistTabCompleter(XWhitelist plugin, ConfigManager configManager) {
         this.plugin = plugin;
+        this.configManager = configManager;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, Command command, @NotNull String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
 
         if (command.getName().equalsIgnoreCase("xwhitelist")) {
@@ -68,14 +73,14 @@ public class XWhitelistTabCompleter implements TabCompleter {
 
     // Obtiene los jugadores que están en la whitelist (dependiendo de si MySQL está habilitado o no)
     private List<String> getWhitelistPlayers() {
-        List<String> whitelistPlayers = new ArrayList<>();
+        List<String> whitelistPlayers;
 
         // Si MySQL está habilitado, obtenemos los jugadores de la base de datos
         if (plugin.isMySQLEnabled()) {
             whitelistPlayers = getWhitelistPlayersFromDatabase();
         } else {
             // Si no está habilitado, obtenemos los jugadores desde el archivo "whitelist.yml"
-            whitelistPlayers = plugin.getWhitelistConfig().getStringList("whitelist");
+            whitelistPlayers = configManager.getWhitelistConfig().getStringList("whitelist");
         }
 
         return whitelistPlayers;
@@ -100,6 +105,6 @@ public class XWhitelistTabCompleter implements TabCompleter {
         return whitelistPlayers;
     }
     private List<String> getMaintenanceWhitelistPlayers() {
-        return MWhitelist.getConfig().getStringList("whitelist");
+        return MWhitelistManager.getConfig().getStringList("whitelist");
     }
 }

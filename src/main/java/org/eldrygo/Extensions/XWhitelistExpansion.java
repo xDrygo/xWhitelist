@@ -1,9 +1,11 @@
-package org.eldrygo.placeholders;
+package org.eldrygo.Extensions;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.eldrygo.Managers.ConfigManager;
 import org.eldrygo.XWhitelist;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.Connection;
@@ -15,9 +17,11 @@ import java.util.List;
 public class XWhitelistExpansion extends PlaceholderExpansion {
 
     private final XWhitelist plugin;
+    private final ConfigManager configManager;
 
-    public XWhitelistExpansion(XWhitelist plugin) {
+    public XWhitelistExpansion(XWhitelist plugin, ConfigManager configManager) {
         this.plugin = plugin;
+        this.configManager = configManager;
     }
 
     @Override
@@ -29,15 +33,15 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
     public boolean persist() {return true;}
 
     @Override
-    public String getIdentifier() { return "xwhitelist"; }
+    public @NotNull String getIdentifier() { return "xwhitelist"; }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "Drygo";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return plugin.getDescription().getVersion();
     }
 
@@ -45,7 +49,7 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, String identifier) {
 
         if (identifier.equals("maintenance_enabled")) {
-            boolean isMaintenanceEnabled = plugin.getMaintenanceWhitelistConfig().getBoolean("enabled");
+            boolean isMaintenanceEnabled = configManager.getMaintenanceWhitelistConfig().getBoolean("enabled");
             return isMaintenanceEnabled ? "true" : "false";
         }
 
@@ -61,7 +65,7 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
 
         if (identifier.equals("maintenance_iswhitelisted")) {
             if (player == null) return "false";
-            return String.valueOf(plugin.getMaintenanceWhitelistConfig().getStringList("whitelist").contains(player.getName()));
+            return String.valueOf(configManager.getMaintenanceWhitelistConfig().getStringList("whitelist").contains(player.getName()));
         }
 
         if (identifier.equals("whitelist_iswhitelisted")) {
@@ -112,7 +116,7 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
         return false;
     }
     private boolean isPlayerWhitelistedFile(String playerName) {
-        List<String> whitelist = plugin.getWhitelistConfig().getStringList("whitelist");
+        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
         return whitelist.contains(playerName);
     }
 

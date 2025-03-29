@@ -1,9 +1,13 @@
-package org.eldrygo;
+package org.eldrygo.Listeners;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.plugin.Plugin;
+import org.eldrygo.Managers.ConfigManager;
+import org.eldrygo.Utils.ChatUtils;
+import org.eldrygo.XWhitelist;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +16,13 @@ import java.util.List;
 
 public class PlayerLoginListener implements Listener {
     private final XWhitelist plugin;
+    private final ConfigManager configManager;
+    private final ChatUtils chatUtils;
 
-    public PlayerLoginListener(Plugin plugin) {
+    public PlayerLoginListener(Plugin plugin, ConfigManager configManager, ChatUtils chatUtils) {
         this.plugin = (XWhitelist) plugin;
+        this.configManager = configManager;
+        this.chatUtils = chatUtils;
     }
 
     @EventHandler
@@ -22,30 +30,40 @@ public class PlayerLoginListener implements Listener {
         String username = event.getName();
         plugin.getLogger().info("Verifying the player: " + username);
 
+        List<String> kickMessages = null;
+
         // Revisar primero la whitelist de mantenimiento
-        if (plugin.getMaintenanceWhitelistConfig().getBoolean("enabled", false)) {
+        if (configManager.getMaintenanceWhitelistConfig().getBoolean("enabled", false)) {
             if (!isPlayerInMWhitelist(username)) {
-                List<String> kickMessages = plugin.getMessageConfig().getStringList("kick_messages.maintenance");
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, formatMultiLineMessage(kickMessages, username));
-                return;
+                kickMessages = configManager.getMessageConfig().getStringList("kick_messages.maintenance");
             }
         } else {
-            // Si la whitelist de mantenimiento NO está activada, verificar la whitelist normal
+            // Revisar la whitelist normal si la de mantenimiento no está activa
             if (plugin.getConfig().getBoolean("enabled", false)) {
                 if (plugin.getConfig().getBoolean("mysql.enable")) {
                     Connection connection = plugin.getConnection();
                     if (!isPlayerWhitelistedMySQL(connection, username)) {
-                        List<String> kickMessages = plugin.getMessageConfig().getStringList("kick_messages.whitelist");
-                        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, formatMultiLineMessage(kickMessages, username));
+                        kickMessages = configManager.getMessageConfig().getStringList("kick_messages.whitelist");
                     }
                 } else {
                     if (!isPlayerWhitelistedFile(username)) {
-                        List<String> kickMessages = plugin.getMessageConfig().getStringList("kick_messages.whitelist");
-                        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, formatMultiLineMessage(kickMessages, username));
+                        kickMessages = configManager.getMessageConfig().getStringList("kick_messages.whitelist");
                     }
                 }
             }
-            return;
+        }
+
+        if (kickMessages != null) {
+            String fullMessage = chatUtils.formatMultiLineMessage(kickMessages, username);
+
+            // Log reducido en consola (solo la primera línea)
+            String logMessage = kickMessages.isEmpty() ? "No reason provided." : kickMessages.get(0);
+            if (kickMessages.size() > 1) {
+                logMessage += " [...]";
+            }
+            plugin.getLogger().info("Kicking " + username + ": " + logMessage);
+
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, fullMessage);
         }
     }
 
@@ -63,25 +81,13 @@ public class PlayerLoginListener implements Listener {
 
     // Verifica si el jugador está en la whitelist de `whitelist.yml`
     private boolean isPlayerWhitelistedFile(String playerName) {
-        List<String> whitelist = plugin.getWhitelistConfig().getStringList("whitelist");
+        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
         return whitelist.contains(playerName);
     }
 
     // Verifica si el jugador está en la whitelist de mantenimiento
     private boolean isPlayerInMWhitelist(String playerName) {
-        List<String> maintenanceWhitelist = plugin.getMaintenanceWhitelistConfig().getStringList("whitelist");
+        List<String> maintenanceWhitelist = configManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
         return maintenanceWhitelist.contains(playerName);
-    }
-    private String formatMultiLineMessage(List<String> messages, String playerName) {
-        String prefix = plugin.getMessageConfig().getString("prefix", "#ff0000&lx&r&lWhitelist &8»&r"); // Valor por defecto del prefix
-
-        StringBuilder formattedMessage = new StringBuilder();
-        for (String line : messages) {
-            formattedMessage.append(ChatUtils.formatColor(
-                    line.replace("%player%", playerName)
-                            .replace("%prefix%", prefix)
-            )).append("\n");
-        }
-        return formattedMessage.toString().trim();
     }
 }

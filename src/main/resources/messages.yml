@@ -14,7 +14,7 @@
 # Welcome to the messages configuration file. Here you can change every in-game message of the plugin, prefix and kick messages.
 
 # Changes the prefix of the plugin, you can call it typing %prefix% in the messages. (Default: "#ff0000&lx&r&lWhitelist &8»&r")
-prefix: "#ff0000&lx&r&lWhitelist &8»&r"
+prefix: "#ff177c&lx&r&lWhitelist &8»&r"
 
 # The messages that displays when a player tries to log in on the server and is not on the whitelist.
 kick_messages:
