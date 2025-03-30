@@ -1,6 +1,7 @@
 package org.eldrygo;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eldrygo.API.XWhitelistAPI;
@@ -13,6 +14,7 @@ import org.eldrygo.Utils.DBUtils;
 import org.eldrygo.Utils.LoadUtils;
 import org.eldrygo.Utils.LogsUtils;
 
+import java.io.File;
 import java.sql.*;
 import java.util.logging.Logger;
 
@@ -41,7 +43,7 @@ public class XWhitelist extends JavaPlugin {
         ChatUtils chatUtils = new ChatUtils(configManager, this);
         this.configManager = new ConfigManager(this, configManager, chatUtils);
         this.logsUtils = new LogsUtils(this);
-        this.dBUtils = new DBUtils();
+        this.dBUtils = new DBUtils(this);
         LoadUtils loadUtils = new LoadUtils(configManager, this, mWhitelistManager, dBUtils, fileWhitelistManager, mySQLWhitelistManager, chatUtils);
         XWhitelistAPI xWhitelistAPI = new XWhitelistAPI(this, connection, configManager);
 
@@ -59,4 +61,5 @@ public class XWhitelist extends JavaPlugin {
     public boolean isPlaceholderAPIEnabled() { return workingPlaceholderAPI; }
     public Connection getConnection() { return connection; }
     public String getPrefix() {return configManager.prefix;}
+    public FileConfiguration getPluginConfig() { return config; }
 }

@@ -115,7 +115,7 @@ public class ConfigManager {
         loadWhitelistFile();
         boolean newMySQLEnabled = plugin.getConfig().getBoolean("mysql.enable", false);
         if (plugin.useMySQL || newMySQLEnabled) {
-            DBUtils.reloadDatabaseConnection(config);
+            DBUtils.reloadDatabaseConnection();
         }
         sender.sendMessage(chatUtils.getMessage("commands.plugin.reload_success"));
     }

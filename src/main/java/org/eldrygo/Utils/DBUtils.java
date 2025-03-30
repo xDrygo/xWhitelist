@@ -1,6 +1,5 @@
 package org.eldrygo.Utils;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.eldrygo.XWhitelist;
 
 import java.sql.DriverManager;
@@ -10,7 +9,7 @@ import java.sql.Statement;
 public class DBUtils {
     private static XWhitelist plugin;
 
-    public static void setPlugin(XWhitelist plugin) {
+    public DBUtils(XWhitelist plugin) {
         DBUtils.plugin = plugin;
     }
 
@@ -26,7 +25,7 @@ public class DBUtils {
             plugin.log.severe("❌ Error creating table in MySQL: " + e.getMessage());
         }
     }
-    public void connectToDatabase() {
+    public static void connectToDatabase() {
         String host = plugin.getConfig().getString("mysql.host");
         int port = plugin.getConfig().getInt("mysql.port");
         String database = plugin.getConfig().getString("mysql.database");
@@ -40,17 +39,17 @@ public class DBUtils {
             plugin.log.severe("❌ MySQL connection error: " + e.getMessage());
         }
     }
-    public static void reloadDatabaseConnection(FileConfiguration config) {
+    public static void reloadDatabaseConnection() {
         try {
-            if (plugin.connection != null && !plugin.connection.isClosed()) {
-                plugin.connection.close();
+            if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
+                plugin.getConnection().close();
             }
 
-            String host = config.getString("mysql.host");
-            int port = config.getInt("mysql.port");
-            String database = config.getString("mysql.database");
-            String user = config.getString("mysql.user");
-            String password = config.getString("mysql.password");
+            String host = plugin.getConfig().getString("mysql.host");
+            int port = plugin.getConfig().getInt("mysql.port");
+            String database = plugin.getConfig().getString("mysql.database");
+            String user = plugin.getConfig().getString("mysql.user");
+            String password = plugin.getConfig().getString("mysql.password");
 
             String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
             plugin.connection = DriverManager.getConnection(url, user, password);
@@ -63,8 +62,8 @@ public class DBUtils {
     }
     public void unloadDatabase() {
         try {
-            if (plugin.connection != null && !plugin.connection.isClosed()) {
-                plugin.connection.close();
+            if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
+                plugin.getConnection().close();
                 plugin.log.info("📴 Disconnected from database.");
             }
         } catch (SQLException e) {
