@@ -1,7 +1,7 @@
 package org.eldrygo.Managers;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.eldrygo.XWhitelist;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +9,13 @@ import java.util.List;
 
 public class MWhitelistManager {
 
-    private final JavaPlugin plugin;
+    private final XWhitelist plugin;
     private final File configFile;
-    private static YamlConfiguration config;
+    private YamlConfiguration config; // No es estática
 
-    public MWhitelistManager(JavaPlugin plugin) {
+    public MWhitelistManager(XWhitelist plugin) {
         this.plugin = plugin;
         this.configFile = new File(plugin.getDataFolder(), "maintenance_whitelist.yml");
-        loadConfig();
     }
 
     public void loadConfig() {
@@ -29,14 +28,15 @@ public class MWhitelistManager {
     public boolean isMaintenanceWhitelistActive() {
         return config.getBoolean("enabled", false);
     }
-    public static YamlConfiguration getConfig() {
+
+    public YamlConfiguration getConfig() {
         return config;
     }
+
     public void toggleMaintenanceWhitelist() {
         boolean currentStatus = config.getBoolean("enabled", false);
-        config.set("enabled", !currentStatus);
-        saveConfig();
-        loadConfig();
+        config.set("enabled", !currentStatus);  // Cambiar el estado
+        saveConfig();  // Solo guardamos sin recargar la configuración
         plugin.getLogger().info("🔄 Maintenance whitelist set to: " + !currentStatus);
     }
 
@@ -52,7 +52,7 @@ public class MWhitelistManager {
         try {
             config.save(configFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Error on saving the config: " + e.getMessage());
+            plugin.getLogger().severe("❌ Error saving the config: " + e.getMessage());
         }
     }
 }

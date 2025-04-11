@@ -16,10 +16,12 @@ public class XWhitelistTabCompleter implements TabCompleter {
 
     private final XWhitelist plugin;
     private final ConfigManager configManager;
+    private final MWhitelistManager mWhitelistManager;
 
-    public XWhitelistTabCompleter(XWhitelist plugin, ConfigManager configManager) {
+    public XWhitelistTabCompleter(XWhitelist plugin, ConfigManager configManager, MWhitelistManager mWhitelistManager) {
         this.plugin = plugin;
         this.configManager = configManager;
+        this.mWhitelistManager = mWhitelistManager;
     }
 
     @Override
@@ -97,7 +99,7 @@ public class XWhitelistTabCompleter implements TabCompleter {
             var resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                whitelistPlayers.add(resultSet.getString("player_name"));
+                whitelistPlayers.add(resultSet.getString("username"));
             }
         } catch (Exception e) {
             plugin.getLogger().severe("Failed on get players on database: " + e.getMessage());
@@ -105,6 +107,6 @@ public class XWhitelistTabCompleter implements TabCompleter {
         return whitelistPlayers;
     }
     private List<String> getMaintenanceWhitelistPlayers() {
-        return MWhitelistManager.getConfig().getStringList("whitelist");
+        return mWhitelistManager.getConfig().getStringList("whitelist");
     }
 }

@@ -67,13 +67,13 @@ public class MySQLWhitelistManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT username FROM whitelist")) {
 
+            sender.sendMessage(chatUtils.getMessage("commands.whitelist.list.header"));
             // Comprobar si la consulta está vacía
             boolean hasPlayers = false;
             String rowFormat = chatUtils.getMessage("commands.whitelist.list.row");
             while (rs.next()) {
                 hasPlayers = true;
                 String player = rs.getString("username");
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.list.header"));
                 sender.sendMessage(rowFormat.replace("%player%", player));
             }
 

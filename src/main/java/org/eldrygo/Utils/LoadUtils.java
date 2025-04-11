@@ -32,7 +32,6 @@ public class LoadUtils {
         this.fileWhitelistManager = fileWhitelistManager;
         this.mySQLWhitelistManager = mySQLWhitelistManager;
         this.chatUtils = chatUtils;
-
     }
 
     public void loadFeatures() {
@@ -47,8 +46,6 @@ public class LoadUtils {
         if (plugin.useMySQL) {
             dBUtils.connectToDatabase();
             dBUtils.createTableIfNotExists();
-        } else {
-            configManager.loadWhitelistFile();
         }
     }
     private void loadPlaceholderAPI() {
@@ -61,8 +58,8 @@ public class LoadUtils {
         }
     }
     public void loadCommands() {
-        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setExecutor(new XWhitelistCommand(plugin, mWhitelistManager, configManager, fileWhitelistManager, mySQLWhitelistManager, chatUtils));
-        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setTabCompleter(new XWhitelistTabCompleter(plugin, configManager));
+        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setExecutor(new XWhitelistCommand(plugin, mWhitelistManager, configManager, fileWhitelistManager, mySQLWhitelistManager, chatUtils, dBUtils));
+        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setTabCompleter(new XWhitelistTabCompleter(plugin, configManager, mWhitelistManager));
         if (plugin.getCommand("xwhitelist") == null) {
             plugin.getLogger().severe("❌ Error: xWhitelist command is no registered in plugin.yml");
         }
@@ -74,7 +71,9 @@ public class LoadUtils {
         plugin.config = plugin.getConfig();
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
-        configManager.messagesConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "messages.yml"));
+        mWhitelistManager.loadConfig();
+        configManager.loadWhitelistFile();
+        configManager.setMessagesConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "messages.yml")));
         configManager.loadMaintenanceWhitelist();
         configManager.reloadMessages();
     }

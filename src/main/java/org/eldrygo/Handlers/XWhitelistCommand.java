@@ -8,6 +8,7 @@ import org.eldrygo.Managers.FileWhitelistManager;
 import org.eldrygo.Managers.MWhitelistManager;
 import org.eldrygo.Managers.MySQLWhitelistManager;
 import org.eldrygo.Utils.ChatUtils;
+import org.eldrygo.Utils.DBUtils;
 import org.eldrygo.XWhitelist;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,14 +22,16 @@ public class XWhitelistCommand implements CommandExecutor {
     private final FileWhitelistManager fileWhitelistManager;
     private final MySQLWhitelistManager mySQLWhitelistManager;
     private final ChatUtils chatUtils;
+    private final DBUtils dbUtils;
 
-    public XWhitelistCommand(XWhitelist plugin, MWhitelistManager mWhitelistManager, ConfigManager configManager, FileWhitelistManager fileWhitelistManager, MySQLWhitelistManager mySQLWhitelistManager, ChatUtils chatUtils) {
+    public XWhitelistCommand(XWhitelist plugin, MWhitelistManager mWhitelistManager, ConfigManager configManager, FileWhitelistManager fileWhitelistManager, MySQLWhitelistManager mySQLWhitelistManager, ChatUtils chatUtils, DBUtils dbUtils) {
         this.plugin = plugin;
         this.mWhitelistManager = mWhitelistManager;
         this.configManager = configManager;
         this.fileWhitelistManager = fileWhitelistManager;
         this.mySQLWhitelistManager = mySQLWhitelistManager;
         this.chatUtils = chatUtils;
+        this.dbUtils = dbUtils;
     }
 
     @Override
@@ -142,7 +145,7 @@ public class XWhitelistCommand implements CommandExecutor {
                 sender.sendMessage(chatUtils.getMessage("error.no_permission"));
                 return true;
             }
-            configManager.reloadConfig(sender);
+            reloadConfig();
             return true;
 
         // Command: /xwhitelist help
@@ -284,8 +287,8 @@ public class XWhitelistCommand implements CommandExecutor {
             // Mensaje por defecto si no hay configuración en el archivo
             helpMessages = List.of(
                     " ",
-                    " ",
-                    "                            #ff0000&lX&r&lWhitelist &8» &r&fHelp",
+                    " ","                            #ff0000&lX&r&lWhitelist &8» &r&fHelp"
+                    ,
                     " ",
                     "#fff18d&l                    ᴘʟᴜɢɪɴ ᴄᴏᴍᴍᴀɴᴅꜱ",
                     "&f  /xᴡʜɪᴛᴇʟɪꜱᴛ ʜᴇʟᴘ #707070» #ccccccShows this help message",
@@ -351,5 +354,15 @@ public class XWhitelistCommand implements CommandExecutor {
         sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       added new functions for customization. Enjoy it!"));
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#666666+==================================================+"));
+    }
+    public void reloadConfig() {
+        configManager.reloadPluginConfig();
+        configManager.loadMaintenanceWhitelist();
+        configManager.reloadMessages();
+        configManager.loadWhitelistFile();
+        boolean newMySQLEnabled = plugin.getConfig().getBoolean("mysql.enable", false);
+        if (plugin.useMySQL || newMySQLEnabled) {
+            dbUtils.reloadDatabaseConnection();
+        }
     }
 }

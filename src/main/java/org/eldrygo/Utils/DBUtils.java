@@ -2,15 +2,35 @@ package org.eldrygo.Utils;
 
 import org.eldrygo.XWhitelist;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBUtils {
-    private static XWhitelist plugin;
+    private final XWhitelist plugin;
 
     public DBUtils(XWhitelist plugin) {
-        DBUtils.plugin = plugin;
+        this.plugin = plugin;
+    }
+
+    public void connectToDatabase() {
+        String host = plugin.getConfig().getString("mysql.host");
+        int port = plugin.getConfig().getInt("mysql.port");
+        String database = plugin.getConfig().getString("mysql.database");
+        String username = plugin.getConfig().getString("mysql.user");
+        String password = plugin.getConfig().getString("mysql.password");
+
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true";
+
+        try {
+            plugin.log.info("🔌 Attempting to connect to the database...");
+            Connection connection = DriverManager.getConnection(url, username, password);
+            plugin.setConnection(connection);
+            plugin.log.info("✅ Successfully connected to the MySQL database.");
+        } catch (SQLException e) {
+            plugin.log.severe("❌ MySQL connection error: " + e.getMessage());
+        }
     }
 
     public void createTableIfNotExists() {
@@ -20,54 +40,27 @@ public class DBUtils {
                     "username VARCHAR(16) NOT NULL UNIQUE, " +
                     "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ");");
-            plugin.log.info("✅ 'whitelist' table verified in the database.");
+            plugin.log.info("✅ 'whitelist' table verified or created successfully.");
         } catch (SQLException e) {
-            plugin.log.severe("❌ Error creating table in MySQL: " + e.getMessage());
+            plugin.log.severe("❌ Error creating 'whitelist' table: " + e.getMessage());
         }
     }
-    public static void connectToDatabase() {
-        String host = plugin.getConfig().getString("mysql.host");
-        int port = plugin.getConfig().getInt("mysql.port");
-        String database = plugin.getConfig().getString("mysql.database");
-        String username = plugin.getConfig().getString("mysql.user");
-        String password = plugin.getConfig().getString("mysql.password");
-        try {
-            plugin.log.info("Trying to connect with database...");
-            plugin.connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-            plugin.log.info("✅ Connected with MySQL database.");
-        } catch (SQLException e) {
-            plugin.log.severe("❌ MySQL connection error: " + e.getMessage());
-        }
+
+    public void reloadDatabaseConnection() {
+        unloadDatabase();
+        connectToDatabase();
     }
-    public static void reloadDatabaseConnection() {
-        try {
-            if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
-                plugin.getConnection().close();
-            }
 
-            String host = plugin.getConfig().getString("mysql.host");
-            int port = plugin.getConfig().getInt("mysql.port");
-            String database = plugin.getConfig().getString("mysql.database");
-            String user = plugin.getConfig().getString("mysql.user");
-            String password = plugin.getConfig().getString("mysql.password");
-
-            String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-            plugin.connection = DriverManager.getConnection(url, user, password);
-
-            plugin.getLogger().info("Database connection reset.");
-
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Error connecting to database: " + e.getMessage());
-        }
-    }
     public void unloadDatabase() {
         try {
-            if (plugin.getConnection() != null && !plugin.getConnection().isClosed()) {
-                plugin.getConnection().close();
-                plugin.log.info("📴 Disconnected from database.");
+            Connection connection = plugin.getConnection();
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+                plugin.setConnection(null);
+                plugin.log.info("📴 Database connection closed successfully.");
             }
         } catch (SQLException e) {
-            plugin.log.severe("❌ Error closing MySQL connection: " + e.getMessage());
+            plugin.log.severe("❌ Error closing the database connection: " + e.getMessage());
         }
     }
 }

@@ -13,9 +13,9 @@ public class ChatUtils {
     private final ConfigManager configManager;
     private final XWhitelist plugin;
 
-    public ChatUtils(ConfigManager configManager, XWhitelist plugin) {
-        this.configManager = configManager;
+    public ChatUtils(XWhitelist plugin, ConfigManager configManager) {
         this.plugin = plugin;
+        this.configManager = configManager;
     }
 
     public static String formatColor(String message) {
@@ -40,9 +40,9 @@ public class ChatUtils {
         return buffer.toString();
     }
     public String getMessage(String path) {
-        String message = configManager.messagesConfig.getString(path);
-        if (configManager.messagesConfig.isList(path)) {
-            List<String> lines = configManager.messagesConfig.getStringList(path);
+        String message = configManager.getMessagesConfig().getString(path);
+        if (configManager.getMessagesConfig().isList(path)) {
+            List<String> lines = configManager.getMessagesConfig().getStringList(path);
             return ChatUtils.formatColor(String.join("\n", lines));
         } else {
             if (message == null || message.isEmpty()) {

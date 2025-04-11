@@ -6,6 +6,7 @@ import org.eldrygo.Utils.ChatUtils;
 import java.util.List;
 
 public class FileWhitelistManager {
+
     private final ConfigManager configManager;
     private final ChatUtils chatUtils;
 
