@@ -336,18 +336,6 @@ public class XWhitelistCommand implements CommandExecutor {
         sender.sendMessage(ChatUtils.formatColor("&f                           ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀᴀᴘɪ #707070» #FFFAAB" + placeholderStatus));
         sender.sendMessage(ChatUtils.formatColor("&f                           ᴍʏꜱqʟ ᴡʜɪᴛᴇʟɪꜱᴛ #707070» #FFFAAB" + mySQLStatus));
         sender.sendMessage(ChatUtils.formatColor("&7"));
-        sender.sendMessage(ChatUtils.formatColor("#fff18d&l                      ᴠᴇʀꜱɪᴏɴ ᴄʜᴀɴɢᴇꜱ"));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded multi line kick messages."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded offline mode whitelist."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded enable or disable whitelist."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded management commands for maintenance whitelist."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABMoved command /mwhitelist to /xwhitelist maintenance."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded %prefix% for messages."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded new placeholders."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABAdded tab completion on commands."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABReformed custom message system."));
-        sender.sendMessage(ChatUtils.formatColor("&f      #7070701. #FFFAABNew Spigot and Modrinth page!"));
-        sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#fff18d&l               ᴅʀʏɢᴏ'ꜱ ɴᴏᴛᴇ ᴏꜰ ᴛʜᴇ ᴠᴇʀꜱɪᴏɴ"));
         sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       Hi, this was a great update I want to implement "));
         sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       to the plugin, I need to reform the plugin and"));
