@@ -8,7 +8,7 @@ commands:
   xwhitelist:
     description: "Whitelist commands"
     aliases:
-        - xwl
+        - xw
     subcommands:
       enable:
         description: "Enable the whitelist."
