@@ -6,13 +6,26 @@
 
     <groupId>org.eldrygo</groupId>
     <artifactId>XWhitelist</artifactId>
-    <version>1.2.04</version>
+    <version>1.3.0</version>
+    <packaging>jar</packaging>
+
+    <name>xWhitelist</name>
+    <description>A paper plugin that manage a whitelist system for Minecraft servers.</description>
+    <url>https://github.com/xDrygo/xWhitelist</url>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+        </license>
+    </licenses>
+
     <repositories>
         <!-- This adds the Spigot Maven repository to the build -->
         <repository>
@@ -24,6 +37,16 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <!--This adds the Spigot API artifact to the build -->
