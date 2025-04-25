@@ -1,9 +1,9 @@
-package org.eldrygo.Managers;
+package org.eldrygo.XWhitelist.Managers;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eldrygo.Utils.ChatUtils;
-import org.eldrygo.XWhitelist;
+import org.eldrygo.XWhitelist.Utils.ChatUtils;
+import org.eldrygo.XWhitelist.XWhitelist;
 
 import java.io.File;
 import java.io.IOException;

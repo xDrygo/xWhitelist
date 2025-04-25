@@ -1,6 +1,6 @@
 name: xWhitelist
-main: org.eldrygo.XWhitelist
-version: 1.2.10
+main: org.eldrygo.XWhitelist.XWhitelist
+version: 1.3.1
 api-version: 1.20
 softdepend: [PlaceholderAPI]
 authors: [Drygo]
@@ -9,6 +9,7 @@ commands:
     description: "Whitelist commands"
     aliases:
         - xw
+        - xwl
     subcommands:
       enable:
         description: "Enable the whitelist."

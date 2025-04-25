@@ -1,7 +1,7 @@
-package org.eldrygo.Utils;
+package org.eldrygo.XWhitelist.Utils;
 
 import org.bukkit.Bukkit;
-import org.eldrygo.XWhitelist;
+import org.eldrygo.XWhitelist.XWhitelist;
 
 public class LogsUtils {
     private final XWhitelist plugin;

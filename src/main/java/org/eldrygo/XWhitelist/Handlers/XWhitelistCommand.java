@@ -1,15 +1,15 @@
-package org.eldrygo.Handlers;
+package org.eldrygo.XWhitelist.Handlers;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.eldrygo.Managers.ConfigManager;
-import org.eldrygo.Managers.FileWhitelistManager;
-import org.eldrygo.Managers.MWhitelistManager;
-import org.eldrygo.Managers.MySQLWhitelistManager;
-import org.eldrygo.Utils.ChatUtils;
-import org.eldrygo.Utils.DBUtils;
-import org.eldrygo.XWhitelist;
+import org.eldrygo.XWhitelist.Managers.ConfigManager;
+import org.eldrygo.XWhitelist.Managers.FileWhitelistManager;
+import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
+import org.eldrygo.XWhitelist.Managers.MySQLWhitelistManager;
+import org.eldrygo.XWhitelist.Utils.ChatUtils;
+import org.eldrygo.XWhitelist.Utils.DBUtils;
+import org.eldrygo.XWhitelist.XWhitelist;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;

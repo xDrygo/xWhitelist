@@ -1,8 +1,8 @@
-package org.eldrygo.Utils;
+package org.eldrygo.XWhitelist.Utils;
 
 import org.bukkit.ChatColor;
-import org.eldrygo.Managers.ConfigManager;
-import org.eldrygo.XWhitelist;
+import org.eldrygo.XWhitelist.Managers.ConfigManager;
+import org.eldrygo.XWhitelist.XWhitelist;
 
 import java.util.List;
 import java.util.regex.Matcher;

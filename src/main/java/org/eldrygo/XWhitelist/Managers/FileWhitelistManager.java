@@ -1,7 +1,7 @@
-package org.eldrygo.Managers;
+package org.eldrygo.XWhitelist.Managers;
 
 import org.bukkit.command.CommandSender;
-import org.eldrygo.Utils.ChatUtils;
+import org.eldrygo.XWhitelist.Utils.ChatUtils;
 
 import java.util.List;
 

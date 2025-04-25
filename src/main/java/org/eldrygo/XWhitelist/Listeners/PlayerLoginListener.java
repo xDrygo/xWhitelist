@@ -1,12 +1,12 @@
-package org.eldrygo.Listeners;
+package org.eldrygo.XWhitelist.Listeners;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.plugin.Plugin;
-import org.eldrygo.Managers.ConfigManager;
-import org.eldrygo.Utils.ChatUtils;
-import org.eldrygo.XWhitelist;
+import org.eldrygo.XWhitelist.Managers.ConfigManager;
+import org.eldrygo.XWhitelist.Utils.ChatUtils;
+import org.eldrygo.XWhitelist.XWhitelist;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

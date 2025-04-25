@@ -1,16 +1,17 @@
-package org.eldrygo;
+package org.eldrygo.XWhitelist;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-//import org.eldrygo.API.XWhitelistAPI;
-import org.eldrygo.Managers.ConfigManager;
-import org.eldrygo.Managers.FileWhitelistManager;
-import org.eldrygo.Managers.MWhitelistManager;
-import org.eldrygo.Managers.MySQLWhitelistManager;
-import org.eldrygo.Utils.ChatUtils;
-import org.eldrygo.Utils.DBUtils;
-import org.eldrygo.Utils.LoadUtils;
-import org.eldrygo.Utils.LogsUtils;
+//import org.eldrygo.XWhitelist.XWhitelistAPI;
+import org.eldrygo.XWhitelist.API.XWhitelistAPI;
+import org.eldrygo.XWhitelist.Managers.ConfigManager;
+import org.eldrygo.XWhitelist.Managers.FileWhitelistManager;
+import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
+import org.eldrygo.XWhitelist.Managers.MySQLWhitelistManager;
+import org.eldrygo.XWhitelist.Utils.ChatUtils;
+import org.eldrygo.XWhitelist.Utils.DBUtils;
+import org.eldrygo.XWhitelist.Utils.LoadUtils;
+import org.eldrygo.XWhitelist.Utils.LogsUtils;
 
 import java.sql.Connection;
 import java.util.logging.Logger;
@@ -26,6 +27,7 @@ public class XWhitelist extends JavaPlugin {
     private LogsUtils logsUtils;
     private ConfigManager configManager;
     private DBUtils dBUtils;
+    private MWhitelistManager mWhitelistManager;
 
     @Override
     public void onEnable() {
@@ -35,13 +37,13 @@ public class XWhitelist extends JavaPlugin {
         useMySQL = config.getBoolean("mysql.enable", false);
         this.configManager = new ConfigManager(this);
         ChatUtils chatUtils = new ChatUtils(this, configManager);
-        MWhitelistManager mWhitelistManager = new MWhitelistManager(this);
+        this.mWhitelistManager = new MWhitelistManager(this);
         FileWhitelistManager fileWhitelistManager = new FileWhitelistManager(configManager, chatUtils);
         MySQLWhitelistManager mySQLWhitelistManager = new MySQLWhitelistManager(chatUtils);
         this.logsUtils = new LogsUtils(this);
         this.dBUtils = new DBUtils(this);
         LoadUtils loadUtils = new LoadUtils(configManager, this, mWhitelistManager, dBUtils, fileWhitelistManager, mySQLWhitelistManager, chatUtils);
-        //XWhitelistAPI xWhitelistAPI = new XWhitelistAPI(this, connection, configManager);
+        XWhitelistAPI xWhitelistAPI = new XWhitelistAPI(this);
 
         loadUtils.loadFeatures();
         logsUtils.sendRunMessage();
@@ -58,4 +60,6 @@ public class XWhitelist extends JavaPlugin {
     public Connection getConnection() { return connection; }
     public String getPrefix() {return configManager.getPrefix();}
     public void setConnection(Connection newConnection) { this.connection = newConnection; }
+    public ConfigManager getConfigManager() { return configManager; }
+    public MWhitelistManager getMWhitelistManager() { return mWhitelistManager; }
 }
