@@ -74,7 +74,7 @@ List of all commands from the plugin. (All the commands can be used from the con
 - **%xwhitelist_maintenance_playerswhitelisted%** » Returns the number of players in the maintenance whitelist.`
 ## Configuration Files
 ### [config.yml](https://github.com/xDrygo/xWhitelist/blob/master/src/main/resources/config.yml)
-```
+```yaml
 
 #              /$$      /$$ /$$       /$$   /$$               /$$ /$$             /$$
 #             | $$  /$ | $$| $$      |__/  | $$              | $$|__/            | $$
@@ -106,7 +106,7 @@ plugin:
   first_run: true
 ```
 ### [whitelist.yml](https://github.com/xDrygo/xWhitelist/blob/master/src/main/resources/whitelist.yml)
-```
+```yaml
 
 #     /$$      /$$ /$$       /$$   /$$               /$$ /$$             /$$           /$$$$$$$$ /$$ /$$
 #    | $$  /$ | $$| $$      |__/  | $$              | $$|__/            | $$          | $$_____/|__/| $$
@@ -132,7 +132,7 @@ whitelist: []
 
 ```
 ### [maintenance_whitelist.yml](https://github.com/xDrygo/xWhitelist/blob/master/src/main/resources/maintenance_whitelist.yml)
-```
+```yaml
 #                  /$$      /$$ /$$       /$$   /$$               /$$ /$$             /$$    
 #                 | $$  /$ | $$| $$      |__/  | $$              | $$|__/            | $$    
 #    /$$$$$$/$$$$ | $$ /$$$| $$| $$$$$$$  /$$ /$$$$$$    /$$$$$$ | $$ /$$  /$$$$$$$ /$$$$$$  
@@ -166,7 +166,7 @@ whitelist:
   - player3
 ```
 ### [messages.yml](https://github.com/xDrygo/xWhitelist/blob/master/src/main/resources/messages.yml)
-```
+```yaml
 
 #     /$$      /$$
 #    | $$$    /$$$
