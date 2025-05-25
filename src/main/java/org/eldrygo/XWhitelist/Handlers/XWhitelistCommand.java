@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.eldrygo.XWhitelist.Managers.ConfigManager;
 import org.eldrygo.XWhitelist.Managers.FileWhitelistManager;
 import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
-import org.eldrygo.XWhitelist.Managers.MySQLWhitelistManager;
+import org.eldrygo.XWhitelist.Managers.DBWhitelistManager;
 import org.eldrygo.XWhitelist.Utils.ChatUtils;
 import org.eldrygo.XWhitelist.Utils.DBUtils;
 import org.eldrygo.XWhitelist.XWhitelist;
@@ -20,16 +20,16 @@ public class XWhitelistCommand implements CommandExecutor {
     private final MWhitelistManager mWhitelistManager;
     private final ConfigManager configManager;
     private final FileWhitelistManager fileWhitelistManager;
-    private final MySQLWhitelistManager mySQLWhitelistManager;
+    private final DBWhitelistManager dbWhitelistManager;
     private final ChatUtils chatUtils;
     private final DBUtils dbUtils;
 
-    public XWhitelistCommand(XWhitelist plugin, MWhitelistManager mWhitelistManager, ConfigManager configManager, FileWhitelistManager fileWhitelistManager, MySQLWhitelistManager mySQLWhitelistManager, ChatUtils chatUtils, DBUtils dbUtils) {
+    public XWhitelistCommand(XWhitelist plugin, MWhitelistManager mWhitelistManager, ConfigManager configManager, FileWhitelistManager fileWhitelistManager, DBWhitelistManager dbWhitelistManager, ChatUtils chatUtils, DBUtils dbUtils) {
         this.plugin = plugin;
         this.mWhitelistManager = mWhitelistManager;
         this.configManager = configManager;
         this.fileWhitelistManager = fileWhitelistManager;
-        this.mySQLWhitelistManager = mySQLWhitelistManager;
+        this.dbWhitelistManager = dbWhitelistManager;
         this.chatUtils = chatUtils;
         this.dbUtils = dbUtils;
     }
@@ -52,10 +52,10 @@ public class XWhitelistCommand implements CommandExecutor {
                 return true;
             }
             String playerName = args[1];
-            if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.addPlayerToWhitelistMySQL(connection, playerName, sender);
+            if (plugin.getConfig().getBoolean("database.enable")) {
+                dbWhitelistManager.addPlayer(playerName, sender);
             } else {
-                fileWhitelistManager.addPlayerToWhitelistFile(playerName, sender);
+                fileWhitelistManager.addPlayer(playerName, sender);
             }
             return true;
         }
@@ -71,10 +71,10 @@ public class XWhitelistCommand implements CommandExecutor {
                 return true;
             }
             String playerName = args[1];
-            if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.removePlayerFromWhitelistMySQL(connection, playerName, sender);
+            if (plugin.getConfig().getBoolean("database.enable")) {
+                dbWhitelistManager.removePlayer(playerName, sender);
             } else {
-                fileWhitelistManager.removePlayerFromWhitelistFile(playerName, sender);
+                fileWhitelistManager.removePlayer(playerName, sender);
             }
             return true;
         }
@@ -117,10 +117,10 @@ public class XWhitelistCommand implements CommandExecutor {
                 sender.sendMessage(chatUtils.getMessage("error.no_permission"));
                 return true;
             }
-            if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.listWhitelistMySQL(connection,  sender);
+            if (plugin.getConfig().getBoolean("database.enable")) {
+                dbWhitelistManager.listPlayers(sender);
             } else {
-                fileWhitelistManager.listWhitelistFile(sender);
+                fileWhitelistManager.listWhitelist(sender);
             }
             return true;
         }
@@ -131,10 +131,10 @@ public class XWhitelistCommand implements CommandExecutor {
                 sender.sendMessage(chatUtils.getMessage("error.no_permission"));
                 return true;
             }
-            if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.cleanupWhitelistMySQL(connection,  sender);
+            if (plugin.getConfig().getBoolean("database.enable")) {
+                dbWhitelistManager.cleanup(sender);
             } else {
-                fileWhitelistManager.cleanupWhitelistFile(sender);
+                fileWhitelistManager.cleanup(sender);
             }
             return true;
         }
@@ -321,7 +321,7 @@ public class XWhitelistCommand implements CommandExecutor {
     }
     private void infoWhitelist(CommandSender sender) {
         String placeholderStatus = plugin.isPlaceholderAPIEnabled() ? "#a0ff72✔" : "#ff7272✖";
-        String mySQLStatus = plugin.getConfig().getBoolean("mysql.enable") ? "#a0ff72✔" : "#ff7272✖";
+        String mySQLStatus = plugin.getConfig().getBoolean("database.enable") ? "#a0ff72✔" : "#ff7272✖";
         sender.sendMessage(ChatUtils.formatColor("#666666+==================================================+"));
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("&8                            #ff0000&lx&r&lWhitelist &8» &r&fInfo"));
@@ -348,8 +348,8 @@ public class XWhitelistCommand implements CommandExecutor {
         configManager.loadMaintenanceWhitelist();
         configManager.reloadMessages();
         configManager.loadWhitelistFile();
-        boolean newMySQLEnabled = plugin.getConfig().getBoolean("mysql.enable", false);
-        if (plugin.useMySQL || newMySQLEnabled) {
+        boolean newMySQLEnabled = plugin.getConfig().getBoolean("database.enable", false);
+        if (plugin.useDatabase || newMySQLEnabled) {
             dbUtils.reloadDatabaseConnection();
         }
     }

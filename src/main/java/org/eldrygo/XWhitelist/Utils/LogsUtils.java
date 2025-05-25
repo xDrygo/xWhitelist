@@ -15,7 +15,7 @@ public class LogsUtils {
             plugin.getConfig().set("plugin.first_run", false);
             plugin.saveConfig();
         } else {
-            if (plugin.useMySQL) {
+            if (plugin.useDatabase) {
                 startWithMySQL();
             } else {
                 startOffline();

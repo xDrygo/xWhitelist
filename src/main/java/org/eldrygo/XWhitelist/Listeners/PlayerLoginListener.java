@@ -5,24 +5,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.plugin.Plugin;
 import org.eldrygo.XWhitelist.Managers.ConfigManager;
+import org.eldrygo.XWhitelist.Managers.DBWhitelistManager;
 import org.eldrygo.XWhitelist.Utils.ChatUtils;
 import org.eldrygo.XWhitelist.XWhitelist;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class PlayerLoginListener implements Listener {
     private final XWhitelist plugin;
     private final ConfigManager configManager;
     private final ChatUtils chatUtils;
+    private final DBWhitelistManager dbWhitelistManager;
 
-    public PlayerLoginListener(Plugin plugin, ConfigManager configManager, ChatUtils chatUtils) {
+    public PlayerLoginListener(Plugin plugin, ConfigManager configManager, ChatUtils chatUtils, DBWhitelistManager dbWhitelistManager) {
         this.plugin = (XWhitelist) plugin;
         this.configManager = configManager;
         this.chatUtils = chatUtils;
+        this.dbWhitelistManager = dbWhitelistManager;
     }
 
     @EventHandler
@@ -40,9 +40,8 @@ public class PlayerLoginListener implements Listener {
         } else {
             // Revisar la whitelist normal si la de mantenimiento no está activa
             if (plugin.getConfig().getBoolean("enabled", false)) {
-                if (plugin.getConfig().getBoolean("mysql.enable")) {
-                    Connection connection = plugin.getConnection();
-                    if (!isPlayerWhitelistedMySQL(connection, username)) {
+                if (plugin.getConfig().getBoolean("database.enable")) {
+                    if (!dbWhitelistManager.isPlayerWhitelisted(username)) {
                         kickMessages = configManager.getMessageConfig().getStringList("kick_messages.whitelist");
                     }
                 } else {
@@ -64,18 +63,6 @@ public class PlayerLoginListener implements Listener {
             plugin.getLogger().info("Kicking " + username + ": " + logMessage);
 
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, fullMessage);
-        }
-    }
-
-    // Verifica si el jugador está en la whitelist de MySQL
-    private boolean isPlayerWhitelistedMySQL(Connection connection, String playerName) {
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM whitelist WHERE username = ?")) {
-            stmt.setString(1, playerName);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

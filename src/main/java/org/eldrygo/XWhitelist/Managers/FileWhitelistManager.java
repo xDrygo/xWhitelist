@@ -15,43 +15,62 @@ public class FileWhitelistManager {
         this.chatUtils = chatUtils;
     }
 
-    public void addPlayerToWhitelistFile(String playerName, CommandSender sender) {
+    public boolean isPlayerWhitelisted(String playerName) {
+        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
+
+        return whitelist.contains(playerName);
+    }
+
+    public void addPlayer(String playerName, CommandSender sender) {
         List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
 
         if (whitelist.contains(playerName)) {
-            sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.already")
-                    .replace("%player%", playerName));
+            if (sender != null) {
+                sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.already")
+                        .replace("%player%", playerName));
+            }
             return;
         }
 
         whitelist.add(playerName);
         configManager.getWhitelistConfig().set("whitelist", whitelist);
         configManager.saveWhitelistFile();
-        sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.success").replace("%player%", playerName));
+        if (sender != null) {
+            sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.success").replace("%player%", playerName));
+        }
     }
 
-    public void removePlayerFromWhitelistFile(String playerName, CommandSender sender) {
+    public void removePlayer(String playerName, CommandSender sender) {
         List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
 
         if (!whitelist.contains(playerName)) {
-            sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.already").replace("%player%", playerName));
+            if (sender != null) {
+                sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.already").replace("%player%", playerName));
+            }
             return;
         }
 
         whitelist.remove(playerName);
         configManager.getWhitelistConfig().set("whitelist", whitelist);
         configManager.saveWhitelistFile();
-        sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.success").replace("%player%", playerName));
+        if (sender != null) {
+            sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.success").replace("%player%", playerName));
+        }
     }
-    public void cleanupWhitelistFile(CommandSender sender) {
+
+    public void cleanup(CommandSender sender) {
         configManager.getWhitelistConfig().set("whitelist", null);
         configManager.saveWhitelistFile();
         configManager.loadWhitelistFile();
-        sender.sendMessage(chatUtils.getMessage("commands.whitelist.cleanup.success"));
+        if (sender != null) {
+            sender.sendMessage(chatUtils.getMessage("commands.whitelist.cleanup.success"));
+        }
     }
-    public void listWhitelistFile(CommandSender sender) {
+
+    public void listWhitelist(CommandSender sender) {
         List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
-        // Comprobar si la lista de whitelist está vacía
+        if (sender == null) return;
+
         if (whitelist.isEmpty()) {
             sender.sendMessage(chatUtils.getMessage("commands.whitelist.list.empty"));
         } else {

@@ -1,14 +1,21 @@
 package org.eldrygo.XWhitelist.Handlers;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 import org.eldrygo.XWhitelist.Managers.ConfigManager;
 import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
+import org.eldrygo.XWhitelist.Utils.DBUtils;
 import org.eldrygo.XWhitelist.XWhitelist;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +24,13 @@ public class XWhitelistTabCompleter implements TabCompleter {
     private final XWhitelist plugin;
     private final ConfigManager configManager;
     private final MWhitelistManager mWhitelistManager;
+    private final DBUtils dbUtils;
 
-    public XWhitelistTabCompleter(XWhitelist plugin, ConfigManager configManager, MWhitelistManager mWhitelistManager) {
+    public XWhitelistTabCompleter(XWhitelist plugin, ConfigManager configManager, MWhitelistManager mWhitelistManager, DBUtils dbUtils) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.mWhitelistManager = mWhitelistManager;
+        this.dbUtils = dbUtils;
     }
 
     @Override
@@ -78,7 +87,7 @@ public class XWhitelistTabCompleter implements TabCompleter {
         List<String> whitelistPlayers;
 
         // Si MySQL está habilitado, obtenemos los jugadores de la base de datos
-        if (plugin.isMySQLEnabled()) {
+        if (plugin.isDataBaseEnabled()) {
             whitelistPlayers = getWhitelistPlayersFromDatabase();
         } else {
             // Si no está habilitado, obtenemos los jugadores desde el archivo "whitelist.yml"
@@ -90,20 +99,37 @@ public class XWhitelistTabCompleter implements TabCompleter {
 
     // Obtiene los jugadores de la whitelist desde la base de datos MySQL
     private List<String> getWhitelistPlayersFromDatabase() {
+        String type = plugin.getConfig().getString("database.type", "mysql").toLowerCase();
+        Object db = dbUtils.getDatabaseConnection();
+
         List<String> whitelistPlayers = new ArrayList<>();
         try {
-            // Aquí haces la consulta SQL para obtener los jugadores de la whitelist
-            // Asegúrate de que el nombre de la tabla y la columna coincidan con tu base de datos
-            String query = "SELECT player_name FROM whitelist";
-            var statement = plugin.getConnection().createStatement();
-            var resultSet = statement.executeQuery(query);
+            if (type.equalsIgnoreCase("mongodb")) {
+                MongoDatabase mongoDB = (MongoDatabase) db;
+                MongoCollection<Document> collection = mongoDB.getCollection("whitelist");
 
-            while (resultSet.next()) {
-                whitelistPlayers.add(resultSet.getString("username"));
+                for (Document doc : collection.find()) {
+                    String username = doc.getString("username");
+                    if (username != null) {
+                        whitelistPlayers.add(username);
+                    }
+                }
+            } else {
+                Connection connection = (Connection) db;
+                String query = "SELECT username FROM whitelist";
+                try (Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery(query)) {
+
+                    while (resultSet.next()) {
+                        whitelistPlayers.add(resultSet.getString("username"));
+                    }
+                }
             }
+
         } catch (Exception e) {
-            plugin.getLogger().severe("Failed on get players on database: " + e.getMessage());
+            plugin.getLogger().severe("Failed to get players from database: " + e.getMessage());
         }
+
         return whitelistPlayers;
     }
     private List<String> getMaintenanceWhitelistPlayers() {
