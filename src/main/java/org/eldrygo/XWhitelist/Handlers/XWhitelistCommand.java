@@ -287,7 +287,7 @@ public class XWhitelistCommand implements CommandExecutor {
             // Mensaje por defecto si no hay configuración en el archivo
             helpMessages = List.of(
                     " ",
-                    " ","                            #ff0000&lX&r&lWhitelist &8» &r&fHelp"
+                    " ","                            #ff177c&lX&r&lWhitelist &8» &r&fHelp"
                     ,
                     " ",
                     "#fff18d&l                    ᴘʟᴜɢɪɴ ᴄᴏᴍᴍᴀɴᴅꜱ",
@@ -321,10 +321,10 @@ public class XWhitelistCommand implements CommandExecutor {
     }
     private void infoWhitelist(CommandSender sender) {
         String placeholderStatus = plugin.isPlaceholderAPIEnabled() ? "#a0ff72✔" : "#ff7272✖";
-        String mySQLStatus = plugin.getConfig().getBoolean("database.enable") ? "#a0ff72✔" : "#ff7272✖";
-        sender.sendMessage(ChatUtils.formatColor("#666666+==================================================+"));
+        String dbStatus = plugin.getConfig().getBoolean("database.enable") ? "#a0ff72✔" : "#ff7272✖";
         sender.sendMessage(ChatUtils.formatColor("&7"));
-        sender.sendMessage(ChatUtils.formatColor("&8                            #ff0000&lx&r&lWhitelist &8» &r&fInfo"));
+        sender.sendMessage(ChatUtils.formatColor("&7"));
+        sender.sendMessage(ChatUtils.formatColor("&8                            #ff177c&lx&r&lWhitelist &8» &r&fInfo"));
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#fff18d&l                           ᴍᴀᴅᴇ ʙʏ"));
         sender.sendMessage(ChatUtils.formatColor("&f                           xDrygo #707070» &7&o(@eldrygo)"));
@@ -334,22 +334,22 @@ public class XWhitelistCommand implements CommandExecutor {
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#fff18d&l                      ꜰᴇᴀᴛᴜʀᴇꜱ ᴇɴᴀʙʟᴇᴅ"));
         sender.sendMessage(ChatUtils.formatColor("&f                           ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀᴀᴘɪ #707070» #FFFAAB" + placeholderStatus));
-        sender.sendMessage(ChatUtils.formatColor("&f                           ᴍʏꜱqʟ ᴡʜɪᴛᴇʟɪꜱᴛ #707070» #FFFAAB" + mySQLStatus));
+        sender.sendMessage(ChatUtils.formatColor("&f                           ᴅʙ ᴡʜɪᴛᴇʟɪꜱᴛ #707070» #FFFAAB" + dbStatus));
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#fff18d&l               ᴅʀʏɢᴏ'ꜱ ɴᴏᴛᴇ ᴏꜰ ᴛʜᴇ ᴠᴇʀꜱɪᴏɴ"));
-        sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       Hi, this was a great update I want to implement "));
-        sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       to the plugin, I need to reform the plugin and"));
-        sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       added new functions for customization. Enjoy it!"));
+        sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       And, here I am, updating xWhitelist, I opened"));
+        sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       the issues on the GitHub repository to report bugs"));
+        sender.sendMessage(ChatUtils.formatColor("&f  #FFFAAB       exploits or share ideas you want for the plugin :)"));
         sender.sendMessage(ChatUtils.formatColor("&7"));
-        sender.sendMessage(ChatUtils.formatColor("#666666+==================================================+"));
+        sender.sendMessage(ChatUtils.formatColor("&7"));
     }
     public void reloadConfig() {
         configManager.reloadPluginConfig();
         configManager.loadMaintenanceWhitelist();
         configManager.reloadMessages();
         configManager.loadWhitelistFile();
-        boolean newMySQLEnabled = plugin.getConfig().getBoolean("database.enable", false);
-        if (plugin.useDatabase || newMySQLEnabled) {
+        boolean newDBEnabled = plugin.getConfig().getBoolean("database.enable", false);
+        if (plugin.useDatabase || newDBEnabled) {
             dbUtils.reloadDatabaseConnection();
         }
     }

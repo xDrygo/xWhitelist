@@ -4,7 +4,7 @@
   <groupId>org.eldrygo</groupId>
   <artifactId>xWhitelist</artifactId>
   <name>xWhitelist</name>
-  <version>1.4.27</version>
+  <version>1.4.28</version>
   <description>Whitelist plugin for Minecraft servers</description>
   <build>
     <resources>
@@ -26,20 +26,7 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <minimizeJar>true</minimizeJar>
               <filters>
-                <filter>
-                  <artifact>org.postgresql:postgresql</artifact>
-                  <includes>
-                    <include>org/postgresql/**</include>
-                  </includes>
-                </filter>
-                <filter>
-                  <artifact>org.mariadb.jdbc:mariadb-java-client</artifact>
-                  <includes>
-                    <include>org/mariadb/**</include>
-                  </includes>
-                </filter>
                 <filter>
                   <artifact>org.mongodb:mongodb-driver-sync</artifact>
                   <includes>

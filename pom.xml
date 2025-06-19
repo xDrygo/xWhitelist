@@ -6,7 +6,7 @@
 
     <groupId>org.eldrygo</groupId>
     <artifactId>xWhitelist</artifactId>
-    <version>1.4.27</version>
+    <version>1.4.28</version>
     <packaging>jar</packaging>
 
     <name>xWhitelist</name>
@@ -34,40 +34,23 @@
     </repositories>
 
     <dependencies>
-        <!-- Essentials only, all marked provided if available on server -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
         </dependency>
-
-        <!-- Only drivers are shaded (optimized for minimal impact) -->
-        <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <version>3.1.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.2</version>
-        </dependency>
-
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
@@ -96,20 +79,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
                             <filters>
-                                <filter>
-                                    <artifact>org.postgresql:postgresql</artifact>
-                                    <includes>
-                                        <include>org/postgresql/**</include>
-                                    </includes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.mariadb.jdbc:mariadb-java-client</artifact>
-                                    <includes>
-                                        <include>org/mariadb/**</include>
-                                    </includes>
-                                </filter>
                                 <filter>
                                     <artifact>org.mongodb:mongodb-driver-sync</artifact>
                                     <includes>

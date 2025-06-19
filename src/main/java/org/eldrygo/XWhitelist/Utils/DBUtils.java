@@ -27,11 +27,15 @@ public class DBUtils {
         if (dbType.equals("mongodb")) {
             String connectionString = plugin.getConfig().getString("database.mongodb_url");
             if (connectionString == null || connectionString.isEmpty()) {
-                plugin.log.severe("❌ No connection_string found in config.");
+                plugin.log.severe("❌ No MongoDB URI found in config.");
                 return;
             }
-
             connectMongoDB(connectionString);
+            return;
+        }
+
+        if (!dbType.equals("mysql")) {
+            plugin.log.severe("❌ Unsupported database type: " + dbType);
             return;
         }
 
@@ -47,65 +51,26 @@ public class DBUtils {
         String username = section.getString("username");
         String password = section.getString("password");
 
-        if (host == null || host.isEmpty() ||
-                database == null || database.isEmpty() ||
-                username == null || username.isEmpty() ||
-                password == null || password.isEmpty()) {
+        if (host == null || host.isEmpty() || database == null || database.isEmpty()
+                || username == null || username.isEmpty() || password == null || password.isEmpty()) {
             plugin.log.severe("❌ Missing required credential fields in config.");
             return;
         }
 
-        String url;
-        switch (dbType) {
-            case "postgresql":
-                url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
-                break;
-            case "mariadb":
-                url = "jdbc:mariadb://" + host + ":" + port + "/" + database;
-                break;
-            case "mysql":
-                url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true";
-                break;
-            default:
-                plugin.log.severe("❌ Unknown database type: " + dbType);
-                return;
-        }
-
-        connectSQL(url, username, password, dbType);
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true";
+        connectMySQL(url, username, password);
     }
 
-
-    private void connectSQL(String url, String user, String pass, String type) {
+    private void connectMySQL(String url, String user, String pass) {
         try {
-            plugin.log.info("🔌 Connecting to " + type.toUpperCase() + " database...");
+            plugin.log.info("🔌 Connecting to MySQL database...");
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            switch (type) {
-                case "mysql":
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    break;
-                case "mariadb":
-                    Class.forName("org.mariadb.jdbc.Driver");
-                    break;
-                case "postgresql":
-                    Class.forName("org.postgresql.Driver");
-                    break;
-                default:
-                    plugin.log.warning("⚠️ Unknown database type '" + type + "', trying MySQL driver by default.");
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    break;
-            }
-
-            Connection connection;
-            if (user != null && pass != null) {
-                connection = DriverManager.getConnection(url, user, pass);
-            } else {
-                connection = DriverManager.getConnection(url);
-            }
-
+            Connection connection = DriverManager.getConnection(url, user, pass);
             plugin.setConnection(connection);
-            plugin.log.info("✅ Connected to " + type.toUpperCase() + " database.");
+            plugin.log.info("✅ Connected to MySQL database.");
         } catch (SQLException | ClassNotFoundException e) {
-            plugin.log.severe("❌ SQL connection error: " + e.getMessage());
+            plugin.log.severe("❌ MySQL connection error: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -130,9 +95,7 @@ public class DBUtils {
     }
 
     public void createTableIfNotExists() {
-        String type = plugin.getConfig().getString("database.type", "mysql").toLowerCase();
-
-        if (type.equals("mongodb")) {
+        if (dbType.equals("mongodb")) {
             plugin.log.info("📁 MongoDB is schemaless — no need to create tables.");
             return;
         }
@@ -143,18 +106,11 @@ public class DBUtils {
             return;
         }
 
-        String createSQL = switch (type) {
-            case "postgres", "postgresql" -> "CREATE TABLE IF NOT EXISTS whitelist (" +
-                    "id SERIAL PRIMARY KEY, " +
-                    "username VARCHAR(16) NOT NULL UNIQUE, " +
-                    "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ");";
-            default -> "CREATE TABLE IF NOT EXISTS whitelist (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "username VARCHAR(16) NOT NULL UNIQUE, " +
-                    "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ");";
-        };
+        String createSQL = "CREATE TABLE IF NOT EXISTS whitelist (" +
+                "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                "username VARCHAR(16) NOT NULL UNIQUE, " +
+                "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                ");";
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(createSQL);
@@ -185,8 +141,7 @@ public class DBUtils {
     }
 
     public Object getDatabaseConnection() {
-        String type = plugin.getConfig().getString("database.type", "mysql").toLowerCase();
-        return type.equals("mongodb") ? mongoDatabase : plugin.getConnection();
+        return dbType.equals("mongodb") ? mongoDatabase : plugin.getConnection();
     }
 
     public void reloadDatabaseConnection() {
@@ -214,9 +169,5 @@ public class DBUtils {
 
     public String getDBType() {
         return dbType;
-    }
-
-    private boolean hasUserInfoInUrl(String url) {
-        return url.matches("^jdbc:[a-z]+://[^/]+:[^/@]+@.+");
     }
 }

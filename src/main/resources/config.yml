@@ -18,7 +18,7 @@ enabled: false
 # MySQL database connection. You can modify the connection to the database here. (The database table that will be used is: whitelist)
 database:
   enable: true
-  type: mysql # mysql, postgresql, mariadb, mongodb
+  type: mysql # mysql, mongodb
   credentials:
     host: "localhost"
     port: 3306
