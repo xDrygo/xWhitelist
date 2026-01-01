@@ -1,6 +1,6 @@
-package org.eldrygo.XWhitelist.Utils;
+package dev.drygo.XWhitelist.Utils;
 
-import org.eldrygo.XWhitelist.XWhitelist;
+import dev.drygo.XWhitelist.XWhitelist;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

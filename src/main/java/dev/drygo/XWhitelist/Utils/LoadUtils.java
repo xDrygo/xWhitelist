@@ -1,14 +1,14 @@
-package org.eldrygo.XWhitelist.Utils;
+package dev.drygo.XWhitelist.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eldrygo.XWhitelist.Extensions.XWhitelistExpansion;
-import org.eldrygo.XWhitelist.Handlers.XWhitelistCommand;
-import org.eldrygo.XWhitelist.Handlers.XWhitelistTabCompleter;
-import org.eldrygo.XWhitelist.Listeners.PlayerLoginListener;
-import org.eldrygo.XWhitelist.Managers.ConfigManager;
-import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
-import org.eldrygo.XWhitelist.XWhitelist;
+import dev.drygo.XWhitelist.Extensions.XWhitelistExpansion;
+import dev.drygo.XWhitelist.Handlers.XWhitelistCommand;
+import dev.drygo.XWhitelist.Handlers.XWhitelistTabCompleter;
+import dev.drygo.XWhitelist.Listeners.PlayerLoginListener;
+import dev.drygo.XWhitelist.Managers.ConfigManager;
+import dev.drygo.XWhitelist.Managers.MWhitelistManager;
+import dev.drygo.XWhitelist.XWhitelist;
 
 import java.io.File;
 import java.util.Objects;

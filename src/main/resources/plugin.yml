@@ -1,5 +1,5 @@
 name: xWhitelist
-main: org.eldrygo.XWhitelist.XWhitelist
+main: dev.drygo.XWhitelist.XWhitelist
 version: 1.3.2
 api-version: 1.20
 softdepend: [PlaceholderAPI]

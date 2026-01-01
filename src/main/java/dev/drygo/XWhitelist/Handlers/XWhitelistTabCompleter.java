@@ -1,12 +1,12 @@
-package org.eldrygo.XWhitelist.Handlers;
+package dev.drygo.XWhitelist.Handlers;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
-import org.eldrygo.XWhitelist.Managers.ConfigManager;
-import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
-import org.eldrygo.XWhitelist.XWhitelist;
+import dev.drygo.XWhitelist.Managers.ConfigManager;
+import dev.drygo.XWhitelist.Managers.MWhitelistManager;
+import dev.drygo.XWhitelist.XWhitelist;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

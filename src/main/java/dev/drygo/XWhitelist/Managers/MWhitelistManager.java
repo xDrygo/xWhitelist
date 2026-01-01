@@ -1,7 +1,7 @@
-package org.eldrygo.XWhitelist.Managers;
+package dev.drygo.XWhitelist.Managers;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eldrygo.XWhitelist.XWhitelist;
+import dev.drygo.XWhitelist.XWhitelist;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,10 +1,10 @@
-package org.eldrygo.XWhitelist.Extensions;
+package dev.drygo.XWhitelist.Extensions;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eldrygo.XWhitelist.Managers.ConfigManager;
-import org.eldrygo.XWhitelist.XWhitelist;
+import dev.drygo.XWhitelist.Managers.ConfigManager;
+import dev.drygo.XWhitelist.XWhitelist;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

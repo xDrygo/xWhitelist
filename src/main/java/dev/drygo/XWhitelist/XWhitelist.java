@@ -1,13 +1,13 @@
-package org.eldrygo.XWhitelist;
+package dev.drygo.XWhitelist;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.eldrygo.XWhitelist.API.XWhitelistAPI;
-import org.eldrygo.XWhitelist.Managers.ConfigManager;
-import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
-import org.eldrygo.XWhitelist.Utils.ChatUtils;
-import org.eldrygo.XWhitelist.Utils.DBUtils;
-import org.eldrygo.XWhitelist.Utils.LoadUtils;
-import org.eldrygo.XWhitelist.Utils.LogsUtils;
+import dev.drygo.XWhitelist.API.XWhitelistAPI;
+import dev.drygo.XWhitelist.Managers.ConfigManager;
+import dev.drygo.XWhitelist.Managers.MWhitelistManager;
+import dev.drygo.XWhitelist.Utils.ChatUtils;
+import dev.drygo.XWhitelist.Utils.DBUtils;
+import dev.drygo.XWhitelist.Utils.LoadUtils;
+import dev.drygo.XWhitelist.Utils.LogsUtils;
 
 import java.sql.Connection;
 

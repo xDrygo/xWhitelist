@@ -1,9 +1,9 @@
-package org.eldrygo.XWhitelist.API;
+package dev.drygo.XWhitelist.API;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.eldrygo.XWhitelist.Managers.ConfigManager;
-import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
-import org.eldrygo.XWhitelist.XWhitelist;
+import dev.drygo.XWhitelist.Managers.ConfigManager;
+import dev.drygo.XWhitelist.Managers.MWhitelistManager;
+import dev.drygo.XWhitelist.XWhitelist;
 
 import java.io.File;
 import java.sql.*;
