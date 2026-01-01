@@ -34,7 +34,18 @@ public class XWhitelist extends JavaPlugin {
         log = this.getLogger();
         version = getDescription().getVersion();
         config = getConfig();
-        useMySQL = config.getBoolean("mysql.enable", false);
+        boolean tempUseMySQL = config.getBoolean("mysql.enable", false);
+        if (tempUseMySQL) {
+            if (dBUtils.connectToDatabase()) {
+                useMySQL = true;
+            } else {
+                useMySQL = false;
+                dBUtils.unloadDatabase();
+                getLogger().severe("Database connection failed. Using file whitelist.");
+                config.set("mysql.enable", false);
+                saveConfig();
+            }
+        }
         this.configManager = new ConfigManager(this);
         ChatUtils chatUtils = new ChatUtils(this, configManager);
         this.mWhitelistManager = new MWhitelistManager(this);

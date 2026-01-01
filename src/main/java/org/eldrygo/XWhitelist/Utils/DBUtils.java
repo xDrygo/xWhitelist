@@ -14,32 +14,45 @@ public class DBUtils {
         this.plugin = plugin;
     }
 
-    public void connectToDatabase() {
+    public boolean connectToDatabase() {
         String host = plugin.getConfig().getString("mysql.host");
         int port = plugin.getConfig().getInt("mysql.port");
         String database = plugin.getConfig().getString("mysql.database");
         String username = plugin.getConfig().getString("mysql.user");
         String password = plugin.getConfig().getString("mysql.password");
 
-        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true";
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database +
+                "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
         try {
             plugin.log.info("🔌 Attempting to connect to the database...");
             Connection connection = DriverManager.getConnection(url, username, password);
             plugin.setConnection(connection);
             plugin.log.info("✅ Successfully connected to the MySQL database.");
+            return true;
         } catch (SQLException e) {
             plugin.log.severe("❌ MySQL connection error: " + e.getMessage());
+            plugin.setConnection(null);
+            return false;
         }
     }
 
     public void createTableIfNotExists() {
-        try (Statement stmt = plugin.getConnection().createStatement()) {
-            stmt.execute("CREATE TABLE IF NOT EXISTS whitelist (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "username VARCHAR(16) NOT NULL UNIQUE, " +
-                    "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ");");
+        Connection connection = plugin.getConnection();
+
+        if (connection == null) {
+            plugin.log.severe("❌ Cannot create tables: database connection is null.");
+            return;
+        }
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("""
+            CREATE TABLE IF NOT EXISTS whitelist (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(16) NOT NULL UNIQUE,
+                added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """);
             plugin.log.info("✅ 'whitelist' table verified or created successfully.");
         } catch (SQLException e) {
             plugin.log.severe("❌ Error creating 'whitelist' table: " + e.getMessage());
