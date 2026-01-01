@@ -7,57 +7,48 @@ import java.util.List;
 
 public class FileWhitelistManager {
 
-    private final ConfigManager configManager;
-    private final ChatUtils chatUtils;
-
-    public FileWhitelistManager(ConfigManager configManager, ChatUtils chatUtils) {
-        this.configManager = configManager;
-        this.chatUtils = chatUtils;
-    }
-
-    public void addPlayerToWhitelistFile(String playerName, CommandSender sender) {
-        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
+    public static void addPlayerToWhitelistFile(String playerName, CommandSender sender) {
+        List<String> whitelist = ConfigManager.getWhitelistConfig().getStringList("whitelist");
 
         if (whitelist.contains(playerName)) {
-            sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.already")
+            sender.sendMessage(ChatUtils.getMessage("commands.whitelist.add.already")
                     .replace("%player%", playerName));
             return;
         }
 
         whitelist.add(playerName);
-        configManager.getWhitelistConfig().set("whitelist", whitelist);
-        configManager.saveWhitelistFile();
-        sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.success").replace("%player%", playerName));
+        ConfigManager.getWhitelistConfig().set("whitelist", whitelist);
+        ConfigManager.saveWhitelistFile();
+        sender.sendMessage(ChatUtils.getMessage("commands.whitelist.add.success").replace("%player%", playerName));
     }
 
-    public void removePlayerFromWhitelistFile(String playerName, CommandSender sender) {
-        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
+    public static void removePlayerFromWhitelistFile(String playerName, CommandSender sender) {
+        List<String> whitelist = ConfigManager.getWhitelistConfig().getStringList("whitelist");
 
         if (!whitelist.contains(playerName)) {
-            sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.already").replace("%player%", playerName));
+            sender.sendMessage(ChatUtils.getMessage("commands.whitelist.remove.already").replace("%player%", playerName));
             return;
         }
 
         whitelist.remove(playerName);
-        configManager.getWhitelistConfig().set("whitelist", whitelist);
-        configManager.saveWhitelistFile();
-        sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.success").replace("%player%", playerName));
+        ConfigManager.getWhitelistConfig().set("whitelist", whitelist);
+        ConfigManager.saveWhitelistFile();
+        sender.sendMessage(ChatUtils.getMessage("commands.whitelist.remove.success").replace("%player%", playerName));
     }
-    public void cleanupWhitelistFile(CommandSender sender) {
-        configManager.getWhitelistConfig().set("whitelist", null);
-        configManager.saveWhitelistFile();
-        configManager.loadWhitelistFile();
-        sender.sendMessage(chatUtils.getMessage("commands.whitelist.cleanup.success"));
+    public static void cleanupWhitelistFile(CommandSender sender) {
+        ConfigManager.getWhitelistConfig().set("whitelist", null);
+        ConfigManager.saveWhitelistFile();
+        ConfigManager.loadWhitelistFile();
+        sender.sendMessage(ChatUtils.getMessage("commands.whitelist.cleanup.success"));
     }
-    public void listWhitelistFile(CommandSender sender) {
-        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
-        // Comprobar si la lista de whitelist está vacía
+    public static void listWhitelistFile(CommandSender sender) {
+        List<String> whitelist = ConfigManager.getWhitelistConfig().getStringList("whitelist");
         if (whitelist.isEmpty()) {
-            sender.sendMessage(chatUtils.getMessage("commands.whitelist.list.empty"));
+            sender.sendMessage(ChatUtils.getMessage("commands.whitelist.list.empty"));
         } else {
-            sender.sendMessage(chatUtils.getMessage("commands.whitelist.list.header"));
+            sender.sendMessage(ChatUtils.getMessage("commands.whitelist.list.header"));
             for (String player : whitelist) {
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.list.row").replace("%player%", player));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.list.row").replace("%player%", player));
             }
         }
     }

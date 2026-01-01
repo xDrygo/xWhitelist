@@ -10,12 +10,10 @@ import java.util.regex.Pattern;
 
 public class ChatUtils {
 
-    private final ConfigManager configManager;
-    private final XWhitelist plugin;
+    private static XWhitelist plugin;
 
-    public ChatUtils(XWhitelist plugin, ConfigManager configManager) {
-        this.plugin = plugin;
-        this.configManager = configManager;
+    public static void init(XWhitelist plugin) {
+        ChatUtils.plugin = plugin;
     }
 
     public static String formatColor(String message) {
@@ -39,21 +37,21 @@ public class ChatUtils {
         matcher.appendTail(buffer);
         return buffer.toString();
     }
-    public String getMessage(String path) {
-        String message = configManager.getMessagesConfig().getString(path);
-        if (configManager.getMessagesConfig().isList(path)) {
-            List<String> lines = configManager.getMessagesConfig().getStringList(path);
+    public static String getMessage(String path) {
+        String message = ConfigManager.getMessagesConfig().getString(path);
+        if (ConfigManager.getMessagesConfig().isList(path)) {
+            List<String> lines = ConfigManager.getMessagesConfig().getStringList(path);
             return ChatUtils.formatColor(String.join("\n", lines));
         } else {
             if (message == null || message.isEmpty()) {
                 plugin.getLogger().warning("[WARNING] Message not found: " + path);
-                return ChatUtils.formatColor("%prefix% #FF0000&l[ERROR] #FF3535Message not found: " + path).replace("%prefix%", plugin.getPrefix());
+                return ChatUtils.formatColor("%prefix% #FF0000&l[ERROR] #FF3535Message not found: " + path).replace("%prefix%", XWhitelist.getPrefix());
             }
-            return ChatUtils.formatColor(message.replace("%prefix%", plugin.getPrefix()));
+            return ChatUtils.formatColor(message.replace("%prefix%", XWhitelist.getPrefix()));
         }
     }
-    public String formatMultiLineMessage(List<String> messages, String playerName) {
-        String prefix = configManager.getMessageConfig().getString("prefix", "#ff177c&lx&r&lWhitelist &8»&r"); // Valor por defecto del prefix
+    public static String formatMultiLineMessage(List<String> messages, String playerName) {
+        String prefix = ConfigManager.getMessageConfig().getString("prefix", "#ff177c&lx&r&lWhitelist &8»&r"); // Valor por defecto del prefix
 
         StringBuilder formattedMessage = new StringBuilder();
         for (String line : messages) {

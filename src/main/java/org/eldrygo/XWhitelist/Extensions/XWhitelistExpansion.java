@@ -17,11 +17,9 @@ import java.util.List;
 public class XWhitelistExpansion extends PlaceholderExpansion {
 
     private final XWhitelist plugin;
-    private final ConfigManager configManager;
 
-    public XWhitelistExpansion(XWhitelist plugin, ConfigManager configManager) {
+    public XWhitelistExpansion(XWhitelist plugin) {
         this.plugin = plugin;
-        this.configManager = configManager;
     }
 
     @Override
@@ -49,7 +47,7 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, String identifier) {
 
         if (identifier.equals("maintenance_enabled")) {
-            boolean isMaintenanceEnabled = configManager.getMaintenanceWhitelistConfig().getBoolean("enabled");
+            boolean isMaintenanceEnabled = ConfigManager.getMaintenanceWhitelistConfig().getBoolean("enabled");
             return isMaintenanceEnabled ? "true" : "false";
         }
 
@@ -65,7 +63,7 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
 
         if (identifier.equals("maintenance_iswhitelisted")) {
             if (player == null) return "false";
-            return String.valueOf(configManager.getMaintenanceWhitelistConfig().getStringList("whitelist").contains(player.getName()));
+            return String.valueOf(ConfigManager.getMaintenanceWhitelistConfig().getStringList("whitelist").contains(player.getName()));
         }
 
         if (identifier.equals("whitelist_iswhitelisted")) {
@@ -116,7 +114,7 @@ public class XWhitelistExpansion extends PlaceholderExpansion {
         return false;
     }
     private boolean isPlayerWhitelistedFile(String playerName) {
-        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
+        List<String> whitelist = ConfigManager.getWhitelistConfig().getStringList("whitelist");
         return whitelist.contains(playerName);
     }
 

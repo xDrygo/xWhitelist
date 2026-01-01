@@ -3,7 +3,6 @@ package org.eldrygo.XWhitelist.Listeners;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.plugin.Plugin;
 import org.eldrygo.XWhitelist.Managers.ConfigManager;
 import org.eldrygo.XWhitelist.Utils.ChatUtils;
 import org.eldrygo.XWhitelist.XWhitelist;
@@ -16,13 +15,9 @@ import java.util.List;
 
 public class PlayerLoginListener implements Listener {
     private final XWhitelist plugin;
-    private final ConfigManager configManager;
-    private final ChatUtils chatUtils;
 
-    public PlayerLoginListener(Plugin plugin, ConfigManager configManager, ChatUtils chatUtils) {
-        this.plugin = (XWhitelist) plugin;
-        this.configManager = configManager;
-        this.chatUtils = chatUtils;
+    public PlayerLoginListener(XWhitelist plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -32,32 +27,29 @@ public class PlayerLoginListener implements Listener {
 
         List<String> kickMessages = null;
 
-        // Revisar primero la whitelist de mantenimiento
-        if (configManager.getMaintenanceWhitelistConfig().getBoolean("enabled", false)) {
+        if (ConfigManager.getMaintenanceWhitelistConfig().getBoolean("enabled", false)) {
             if (!isPlayerInMWhitelist(username)) {
-                kickMessages = configManager.getMessageConfig().getStringList("kick_messages.maintenance");
+                kickMessages = ConfigManager.getMessageConfig().getStringList("kick_messages.maintenance");
             }
         } else {
-            // Revisar la whitelist normal si la de mantenimiento no está activa
             if (plugin.getConfig().getBoolean("enabled", false)) {
                 if (plugin.getConfig().getBoolean("mysql.enable")) {
-                    Connection connection = plugin.getConnection();
+                    Connection connection = XWhitelist.getConnection();
                     if (!isPlayerWhitelistedMySQL(connection, username)) {
-                        kickMessages = configManager.getMessageConfig().getStringList("kick_messages.whitelist");
+                        kickMessages = ConfigManager.getMessageConfig().getStringList("kick_messages.whitelist");
                     }
                 } else {
                     if (!isPlayerWhitelistedFile(username)) {
-                        kickMessages = configManager.getMessageConfig().getStringList("kick_messages.whitelist");
+                        kickMessages = ConfigManager.getMessageConfig().getStringList("kick_messages.whitelist");
                     }
                 }
             }
         }
 
         if (kickMessages != null) {
-            String fullMessage = chatUtils.formatMultiLineMessage(kickMessages, username);
+            String fullMessage = ChatUtils.formatMultiLineMessage(kickMessages, username);
 
-            // Log reducido en consola (solo la primera línea)
-            String logMessage = kickMessages.isEmpty() ? "No reason provided." : kickMessages.get(0);
+            String logMessage = kickMessages.isEmpty() ? "No reason provided." : kickMessages.getFirst();
             if (kickMessages.size() > 1) {
                 logMessage += " [...]";
             }
@@ -67,7 +59,6 @@ public class PlayerLoginListener implements Listener {
         }
     }
 
-    // Verifica si el jugador está en la whitelist de MySQL
     private boolean isPlayerWhitelistedMySQL(Connection connection, String playerName) {
         try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM whitelist WHERE username = ?")) {
             stmt.setString(1, playerName);
@@ -79,15 +70,13 @@ public class PlayerLoginListener implements Listener {
         }
     }
 
-    // Verifica si el jugador está en la whitelist de `whitelist.yml`
     private boolean isPlayerWhitelistedFile(String playerName) {
-        List<String> whitelist = configManager.getWhitelistConfig().getStringList("whitelist");
+        List<String> whitelist = ConfigManager.getWhitelistConfig().getStringList("whitelist");
         return whitelist.contains(playerName);
     }
 
-    // Verifica si el jugador está en la whitelist de mantenimiento
     private boolean isPlayerInMWhitelist(String playerName) {
-        List<String> maintenanceWhitelist = configManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
+        List<String> maintenanceWhitelist = ConfigManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
         return maintenanceWhitelist.contains(playerName);
     }
 }

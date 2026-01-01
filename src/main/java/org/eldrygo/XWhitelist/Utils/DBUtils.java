@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBUtils {
-    private final XWhitelist plugin;
+    private static XWhitelist plugin;
 
-    public DBUtils(XWhitelist plugin) {
-        this.plugin = plugin;
+    public static void init(XWhitelist plugin) {
+        DBUtils.plugin = plugin;
     }
 
-    public boolean connectToDatabase() {
+    public static boolean connectToDatabase() {
         String host = plugin.getConfig().getString("mysql.host");
         int port = plugin.getConfig().getInt("mysql.port");
         String database = plugin.getConfig().getString("mysql.database");
@@ -25,23 +25,23 @@ public class DBUtils {
                 "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
         try {
-            plugin.log.info("🔌 Attempting to connect to the database...");
+            plugin.getLogger().info("🔌 Attempting to connect to the database...");
             Connection connection = DriverManager.getConnection(url, username, password);
-            plugin.setConnection(connection);
-            plugin.log.info("✅ Successfully connected to the MySQL database.");
+            XWhitelist.setConnection(connection);
+            plugin.getLogger().info("✅ Successfully connected to the MySQL database.");
             return true;
         } catch (SQLException e) {
-            plugin.log.severe("❌ MySQL connection error: " + e.getMessage());
-            plugin.setConnection(null);
+            plugin.getLogger().severe("❌ MySQL connection error: " + e.getMessage());
+            XWhitelist.setConnection(null);
             return false;
         }
     }
 
-    public void createTableIfNotExists() {
-        Connection connection = plugin.getConnection();
+    public static void createTableIfNotExists() {
+        Connection connection = XWhitelist.getConnection();
 
         if (connection == null) {
-            plugin.log.severe("❌ Cannot create tables: database connection is null.");
+            plugin.getLogger().severe("❌ Cannot create tables: database connection is null.");
             return;
         }
 
@@ -53,27 +53,27 @@ public class DBUtils {
                 added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """);
-            plugin.log.info("✅ 'whitelist' table verified or created successfully.");
+            plugin.getLogger().info("✅ 'whitelist' table verified or created successfully.");
         } catch (SQLException e) {
-            plugin.log.severe("❌ Error creating 'whitelist' table: " + e.getMessage());
+            plugin.getLogger().severe("❌ Error creating 'whitelist' table: " + e.getMessage());
         }
     }
 
-    public void reloadDatabaseConnection() {
+    public static void reloadDatabaseConnection() {
         unloadDatabase();
         connectToDatabase();
     }
 
-    public void unloadDatabase() {
+    public static void unloadDatabase() {
         try {
-            Connection connection = plugin.getConnection();
+            Connection connection = XWhitelist.getConnection();
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                plugin.setConnection(null);
-                plugin.log.info("📴 Database connection closed successfully.");
+                XWhitelist.setConnection(null);
+                plugin.getLogger().info("📴 Database connection closed successfully.");
             }
         } catch (SQLException e) {
-            plugin.log.severe("❌ Error closing the database connection: " + e.getMessage());
+            plugin.getLogger().severe("❌ Error closing the database connection: " + e.getMessage());
         }
     }
 }

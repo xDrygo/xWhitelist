@@ -9,46 +9,46 @@ import java.util.List;
 
 public class MWhitelistManager {
 
-    private final XWhitelist plugin;
-    private final File configFile;
-    private YamlConfiguration config; // No es estática
+    private static XWhitelist plugin;
+    private static File configFile;
+    private static YamlConfiguration config;
 
-    public MWhitelistManager(XWhitelist plugin) {
-        this.plugin = plugin;
-        this.configFile = new File(plugin.getDataFolder(), "maintenance_whitelist.yml");
+    public static void init(XWhitelist plugin) {
+        MWhitelistManager.plugin = plugin;
+        configFile = new File(plugin.getDataFolder(), "maintenance_whitelist.yml");
     }
 
-    public void loadConfig() {
+    public static void loadConfig() {
         if (!configFile.exists()) {
             plugin.saveResource("maintenance_whitelist.yml", false);
         }
         config = YamlConfiguration.loadConfiguration(configFile);
     }
 
-    public boolean isMaintenanceWhitelistActive() {
+    public static boolean isMaintenanceWhitelistActive() {
         return config.getBoolean("enabled", false);
     }
 
-    public YamlConfiguration getConfig() {
+    public static YamlConfiguration getConfig() {
         return config;
     }
 
-    public void toggleMaintenanceWhitelist() {
+    public static void toggleMaintenanceWhitelist() {
         boolean currentStatus = config.getBoolean("enabled", false);
         config.set("enabled", !currentStatus);  // Cambiar el estado
-        saveConfig();  // Solo guardamos sin recargar la configuración
+        saveConfig();
         plugin.getLogger().info("🔄 Maintenance whitelist set to: " + !currentStatus);
     }
 
-    public List<String> getMaintenanceWhitelist() {
+    public static List<String> getMaintenanceWhitelist() {
         return config.getStringList("whitelist");
     }
 
-    public boolean isPlayerInMaintenanceWhitelist(String playerName) {
+    public static boolean isPlayerInMaintenanceWhitelist(String playerName) {
         return getMaintenanceWhitelist().contains(playerName);
     }
 
-    public void saveConfig() {
+    public static void saveConfig() {
         try {
             config.save(configFile);
         } catch (IOException e) {

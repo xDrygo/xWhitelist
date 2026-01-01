@@ -17,142 +17,124 @@ import java.util.List;
 
 public class XWhitelistCommand implements CommandExecutor {
     private final XWhitelist plugin;
-    private final MWhitelistManager mWhitelistManager;
-    private final ConfigManager configManager;
-    private final FileWhitelistManager fileWhitelistManager;
-    private final MySQLWhitelistManager mySQLWhitelistManager;
-    private final ChatUtils chatUtils;
-    private final DBUtils dbUtils;
 
-    public XWhitelistCommand(XWhitelist plugin, MWhitelistManager mWhitelistManager, ConfigManager configManager, FileWhitelistManager fileWhitelistManager, MySQLWhitelistManager mySQLWhitelistManager, ChatUtils chatUtils, DBUtils dbUtils) {
+    public XWhitelistCommand(XWhitelist plugin) {
         this.plugin = plugin;
-        this.mWhitelistManager = mWhitelistManager;
-        this.configManager = configManager;
-        this.fileWhitelistManager = fileWhitelistManager;
-        this.mySQLWhitelistManager = mySQLWhitelistManager;
-        this.chatUtils = chatUtils;
-        this.dbUtils = dbUtils;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(chatUtils.getMessage("commands.plugin.unknown_command"));
+            sender.sendMessage(ChatUtils.getMessage("commands.plugin.unknown_command"));
             return true;
         }
-        Connection connection = plugin.getConnection();
+        Connection connection = XWhitelist.getConnection();
 
         if (args[0].equalsIgnoreCase("add")) {
             if (!sender.hasPermission("xwhitelist.whitelist.add") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             if (args.length != 2) {
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.add.usage"));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.add.usage"));
                 return true;
             }
             String playerName = args[1];
             if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.addPlayerToWhitelistMySQL(connection, playerName, sender);
+                MySQLWhitelistManager.addPlayerToWhitelistMySQL(connection, playerName, sender);
             } else {
-                fileWhitelistManager.addPlayerToWhitelistFile(playerName, sender);
+                FileWhitelistManager.addPlayerToWhitelistFile(playerName, sender);
             }
             return true;
         }
 
-        // Command: /xwhitelist remove
         if (args[0].equalsIgnoreCase("remove")) {
             if (!sender.hasPermission("xwhitelist.whitelist.remove") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             if (args.length != 2) {
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.remove.usage"));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.remove.usage"));
                 return true;
             }
             String playerName = args[1];
             if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.removePlayerFromWhitelistMySQL(connection, playerName, sender);
+                MySQLWhitelistManager.removePlayerFromWhitelistMySQL(connection, playerName, sender);
             } else {
-                fileWhitelistManager.removePlayerFromWhitelistFile(playerName, sender);
+                FileWhitelistManager.removePlayerFromWhitelistFile(playerName, sender);
             }
             return true;
         }
 
         if (args[0].equalsIgnoreCase("enable")) {
             if (!sender.hasPermission("xwhitelist.whitelist.enable") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             if (!plugin.getConfig().getBoolean("enabled")) {
                 plugin.getConfig().set("enabled", true);
                 plugin.saveConfig();
                 plugin.reloadConfig();
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.enable.success"));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.enable.success"));
             } else {
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.enable.already"));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.enable.already"));
             }
             return true;
         }
 
         if (args[0].equalsIgnoreCase("disable")) {
             if (!sender.hasPermission("xwhitelist.whitelist.disable") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             if (plugin.getConfig().getBoolean("enabled")) {
                 plugin.getConfig().set("enabled", false);
                 plugin.saveConfig();
                 plugin.reloadConfig();
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.disable.success"));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.disable.success"));
             } else {
-                sender.sendMessage(chatUtils.getMessage("commands.whitelist.disable.already"));
+                sender.sendMessage(ChatUtils.getMessage("commands.whitelist.disable.already"));
             }
             return true;
         }
 
-        // Command: /xwhitelist list
         if (args[0].equalsIgnoreCase("list")) {
             if (!sender.hasPermission("xwhitelist.whitelist.list") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.listWhitelistMySQL(connection,  sender);
+                MySQLWhitelistManager.listWhitelistMySQL(connection,  sender);
             } else {
-                fileWhitelistManager.listWhitelistFile(sender);
+                FileWhitelistManager.listWhitelistFile(sender);
             }
             return true;
         }
 
-        // Command: /xwhitelist cleanup
         if (args[0].equalsIgnoreCase("cleanup")) {
             if (!sender.hasPermission("xwhitelist.whitelist.cleanup") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             if (plugin.getConfig().getBoolean("mysql.enable")) {
-                mySQLWhitelistManager.cleanupWhitelistMySQL(connection,  sender);
+                MySQLWhitelistManager.cleanupWhitelistMySQL(connection,  sender);
             } else {
-                fileWhitelistManager.cleanupWhitelistFile(sender);
+                FileWhitelistManager.cleanupWhitelistFile(sender);
             }
             return true;
         }
 
-        // Command: /xwhitelist reload
         if (args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("xwhitelist.plugin.reload") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             reloadConfig();
             return true;
-
-        // Command: /xwhitelist help
         }
         if (args[0].equalsIgnoreCase("help")) {
             if (!sender.hasPermission("xwhitelist.plugin.help") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             helpWhitelist(sender);
@@ -160,7 +142,7 @@ public class XWhitelistCommand implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("info")) {
             if (!sender.hasPermission("xwhitelist.plugin.info") && !sender.hasPermission("xwhitelist.admin")) {
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
             infoWhitelist(sender);
@@ -169,122 +151,121 @@ public class XWhitelistCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("maintenance")) {
             if (args[1].equalsIgnoreCase("enable")) {
                 if (sender.hasPermission("xwhitelist.maintenance.enable") || sender.hasPermission("xwhitelist.admin")) {
-                    if (!mWhitelistManager.isMaintenanceWhitelistActive()) {
-                        mWhitelistManager.toggleMaintenanceWhitelist();
-                        configManager.reloadMaintenanceWhitelist();
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.enable.success"));
+                    if (!MWhitelistManager.isMaintenanceWhitelistActive()) {
+                        MWhitelistManager.toggleMaintenanceWhitelist();
+                        ConfigManager.reloadMaintenanceWhitelist();
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.enable.success"));
                     } else {
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.enable.already"));
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.enable.already"));
                     }
                 } else {
-                    sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                    sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 }
                 return true;
             }
 
             if (args[1].equalsIgnoreCase("disable")) {
                 if (sender.hasPermission("xwhitelist.maintenance.disable") || sender.hasPermission("xwhitelist.admin")) {
-                    if (mWhitelistManager.isMaintenanceWhitelistActive()) {
-                        mWhitelistManager.toggleMaintenanceWhitelist();
-                        configManager.reloadMaintenanceWhitelist();
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.disable.success"));
+                    if (MWhitelistManager.isMaintenanceWhitelistActive()) {
+                        MWhitelistManager.toggleMaintenanceWhitelist();
+                        ConfigManager.reloadMaintenanceWhitelist();
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.disable.success"));
                     } else {
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.disable.already"));
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.disable.already"));
                     }
                 } else {
-                    sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                    sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 }
                 return true;
             }
 
             if (args[1].equalsIgnoreCase("add")) {
                 if (args.length < 3) {
-                    sender.sendMessage(chatUtils.getMessage("commands.maintenance.add.usage"));
+                    sender.sendMessage(ChatUtils.getMessage("commands.maintenance.add.usage"));
                     return true;
                 }
                 if (sender.hasPermission("xwhitelist.maintenance.add") || sender.hasPermission("xwhitelist.admin")) {
                     String player = args[2];
-                    List<String> whitelist = configManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
+                    List<String> whitelist = ConfigManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
 
                     if (whitelist.contains(player)) {
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.add.already").replace("%player%", player));
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.add.already").replace("%player%", player));
                         return true;
                     }
 
                     whitelist.add(player);
-                    configManager.getMaintenanceWhitelistConfig().set("whitelist", whitelist);
-                    configManager.saveMaintenanceWhitelist();
-                    configManager.reloadMaintenanceWhitelist();
-                    sender.sendMessage(chatUtils.getMessage("commands.maintenance.add.success").replace("%player%", player));
+                    ConfigManager.getMaintenanceWhitelistConfig().set("whitelist", whitelist);
+                    ConfigManager.saveMaintenanceWhitelist();
+                    ConfigManager.reloadMaintenanceWhitelist();
+                    sender.sendMessage(ChatUtils.getMessage("commands.maintenance.add.success").replace("%player%", player));
                     return true;
                 }
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
 
             if (args[1].equalsIgnoreCase("remove")) {
                 if (args.length < 3) {
-                    sender.sendMessage(chatUtils.getMessage("commands.maintenance.remove.usage"));
+                    sender.sendMessage(ChatUtils.getMessage("commands.maintenance.remove.usage"));
                     return true;
                 }
                 if (sender.hasPermission("xwhitelist.maintenance.remove") || sender.hasPermission("xwhitelist.admin")) {
                     String player = args[2];
-                    List<String> whitelist = configManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
+                    List<String> whitelist = ConfigManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
 
                     if (!whitelist.contains(player)) {
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.remove.already").replace("%player%", player));
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.remove.already").replace("%player%", player));
                         return true;
                     }
 
                     whitelist.remove(player);
-                    configManager.getMaintenanceWhitelistConfig().set("whitelist", whitelist);
-                    configManager.saveMaintenanceWhitelist();
-                    configManager.reloadMaintenanceWhitelist();
-                    sender.sendMessage(chatUtils.getMessage("commands.maintenance.remove.success").replace("%player%", player));
+                    ConfigManager.getMaintenanceWhitelistConfig().set("whitelist", whitelist);
+                    ConfigManager.saveMaintenanceWhitelist();
+                    ConfigManager.reloadMaintenanceWhitelist();
+                    sender.sendMessage(ChatUtils.getMessage("commands.maintenance.remove.success").replace("%player%", player));
                     return true;
                 }
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
 
             if (args[1].equalsIgnoreCase("list")) {
                 if (sender.hasPermission("xwhitelist.maintenance.list") || sender.hasPermission("xwhitelist.admin")) {
-                    List<String> whitelist = configManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
+                    List<String> whitelist = ConfigManager.getMaintenanceWhitelistConfig().getStringList("whitelist");
                     if (whitelist.isEmpty()) {
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.list.empty"));
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.list.empty"));
                         return true;
                     }
-                    sender.sendMessage(chatUtils.getMessage("commands.maintenance.list.header"));
+                    sender.sendMessage(ChatUtils.getMessage("commands.maintenance.list.header"));
                     for (String player : whitelist) {
-                        sender.sendMessage(chatUtils.getMessage("commands.maintenance.list.row").replace("%player%", player));
+                        sender.sendMessage(ChatUtils.getMessage("commands.maintenance.list.row").replace("%player%", player));
                     }
                     return true;
                 }
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
 
             if (args[1].equalsIgnoreCase("cleanup")) {
                 if (sender.hasPermission("xwhitelist.maintenance.cleanup") || sender.hasPermission("xwhitelist.admin")) {
-                    configManager.getMaintenanceWhitelistConfig().set("whitelist", null);
-                    configManager.saveMaintenanceWhitelist();
-                    configManager.reloadMaintenanceWhitelist();
-                    sender.sendMessage(chatUtils.getMessage("commands.maintenance.cleanup.success"));
+                    ConfigManager.getMaintenanceWhitelistConfig().set("whitelist", null);
+                    ConfigManager.saveMaintenanceWhitelist();
+                    ConfigManager.reloadMaintenanceWhitelist();
+                    sender.sendMessage(ChatUtils.getMessage("commands.maintenance.cleanup.success"));
                     return true;
                 }
-                sender.sendMessage(chatUtils.getMessage("error.no_permission"));
+                sender.sendMessage(ChatUtils.getMessage("error.no_permission"));
                 return true;
             }
         }
 
-        sender.sendMessage(chatUtils.getMessage("commands.plugin.unknown_command"));
+        sender.sendMessage(ChatUtils.getMessage("commands.plugin.unknown_command"));
         return true;
     }
     private void helpWhitelist(CommandSender sender) {
-        List<String> helpMessages = configManager.getMessageConfig().getStringList("help_message");
+        List<String> helpMessages = ConfigManager.getMessageConfig().getStringList("help_message");
 
         if (helpMessages.isEmpty()) {
-            // Mensaje por defecto si no hay configuración en el archivo
             helpMessages = List.of(
                     " ",
                     " ","                            #ff0000&lX&r&lWhitelist &8» &r&fHelp"
@@ -320,7 +301,7 @@ public class XWhitelistCommand implements CommandExecutor {
         }
     }
     private void infoWhitelist(CommandSender sender) {
-        String placeholderStatus = plugin.isPlaceholderAPIEnabled() ? "#a0ff72✔" : "#ff7272✖";
+        String placeholderStatus = XWhitelist.isPlaceholderAPIEnabled() ? "#a0ff72✔" : "#ff7272✖";
         String mySQLStatus = plugin.getConfig().getBoolean("mysql.enable") ? "#a0ff72✔" : "#ff7272✖";
         sender.sendMessage(ChatUtils.formatColor("#666666+==================================================+"));
         sender.sendMessage(ChatUtils.formatColor("&7"));
@@ -330,7 +311,7 @@ public class XWhitelistCommand implements CommandExecutor {
         sender.sendMessage(ChatUtils.formatColor("&f                           xDrygo #707070» &7&o(@eldrygo)"));
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#fff18d&l                  ʀᴜɴɴɪɴɢ ᴘʟᴜɢɪɴ ᴠᴇʀꜱɪᴏɴ"));
-        sender.sendMessage(ChatUtils.formatColor("&f                                    " + plugin.version));
+        sender.sendMessage(ChatUtils.formatColor("&f                                    " + XWhitelist.version));
         sender.sendMessage(ChatUtils.formatColor("&7"));
         sender.sendMessage(ChatUtils.formatColor("#fff18d&l                      ꜰᴇᴀᴛᴜʀᴇꜱ ᴇɴᴀʙʟᴇᴅ"));
         sender.sendMessage(ChatUtils.formatColor("&f                           ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀᴀᴘɪ #707070» #FFFAAB" + placeholderStatus));
@@ -344,13 +325,13 @@ public class XWhitelistCommand implements CommandExecutor {
         sender.sendMessage(ChatUtils.formatColor("#666666+==================================================+"));
     }
     public void reloadConfig() {
-        configManager.reloadPluginConfig();
-        configManager.loadMaintenanceWhitelist();
-        configManager.reloadMessages();
-        configManager.loadWhitelistFile();
+        ConfigManager.reloadPluginConfig();
+        ConfigManager.loadMaintenanceWhitelist();
+        ConfigManager.reloadMessages();
+        ConfigManager.loadWhitelistFile();
         boolean newMySQLEnabled = plugin.getConfig().getBoolean("mysql.enable", false);
-        if (plugin.useMySQL || newMySQLEnabled) {
-            dbUtils.reloadDatabaseConnection();
+        if (XWhitelist.useMySQL || newMySQLEnabled) {
+            DBUtils.reloadDatabaseConnection();
         }
     }
 }

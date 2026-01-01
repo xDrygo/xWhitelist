@@ -7,34 +7,20 @@ import org.eldrygo.XWhitelist.Handlers.XWhitelistCommand;
 import org.eldrygo.XWhitelist.Handlers.XWhitelistTabCompleter;
 import org.eldrygo.XWhitelist.Listeners.PlayerLoginListener;
 import org.eldrygo.XWhitelist.Managers.ConfigManager;
-import org.eldrygo.XWhitelist.Managers.FileWhitelistManager;
 import org.eldrygo.XWhitelist.Managers.MWhitelistManager;
-import org.eldrygo.XWhitelist.Managers.MySQLWhitelistManager;
 import org.eldrygo.XWhitelist.XWhitelist;
 
 import java.io.File;
 import java.util.Objects;
 
 public class LoadUtils {
-    private final ConfigManager configManager;
-    private final XWhitelist plugin;
-    private final MWhitelistManager mWhitelistManager;
-    private final DBUtils dBUtils;
-    private final FileWhitelistManager fileWhitelistManager;
-    private final MySQLWhitelistManager mySQLWhitelistManager;
-    private final ChatUtils chatUtils;
+    private static XWhitelist plugin;
 
-    public LoadUtils(ConfigManager configManager, XWhitelist plugin, MWhitelistManager mWhitelistManager, DBUtils dBUtils, FileWhitelistManager fileWhitelistManager, MySQLWhitelistManager mySQLWhitelistManager, ChatUtils chatUtils) {
-        this.configManager = configManager;
-        this.plugin = plugin;
-        this.mWhitelistManager = mWhitelistManager;
-        this.dBUtils = dBUtils;
-        this.fileWhitelistManager = fileWhitelistManager;
-        this.mySQLWhitelistManager = mySQLWhitelistManager;
-        this.chatUtils = chatUtils;
+    public static void init(XWhitelist plugin) {
+        LoadUtils.plugin = plugin;
     }
 
-    public void loadFeatures() {
+    public static void loadFeatures() {
         loadPlaceholderAPI();
         loadCommands();
         loadConfigFiles();
@@ -42,39 +28,38 @@ public class LoadUtils {
         loadWhitelistManager();
         loadListeners();
     }
-    private void loadWhitelistManager() {
-        if (plugin.useMySQL) {
-            dBUtils.connectToDatabase();
-            dBUtils.createTableIfNotExists();
+    private static void loadWhitelistManager() {
+        if (XWhitelist.useMySQL) {
+            DBUtils.connectToDatabase();
+            DBUtils.createTableIfNotExists();
         }
     }
-    private void loadPlaceholderAPI() {
+    private static void loadPlaceholderAPI() {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new XWhitelistExpansion(plugin, configManager).register();
-            plugin.log.info("✅ PlaceholderAPI detected. Placeholders will work.");
-            plugin.workingPlaceholderAPI = true;
+            new XWhitelistExpansion(plugin).register();
+            plugin.getLogger().info("✅ PlaceholderAPI detected. Placeholders will work.");
+            XWhitelist.workingPlaceholderAPI = true;
         } else {
-            plugin.log.warning("⚠ PlaceholderAPI not detected. Placeholders will not work.");
+            plugin.getLogger().warning("⚠ PlaceholderAPI not detected. Placeholders will not work.");
         }
     }
-    public void loadCommands() {
-        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setExecutor(new XWhitelistCommand(plugin, mWhitelistManager, configManager, fileWhitelistManager, mySQLWhitelistManager, chatUtils, dBUtils));
-        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setTabCompleter(new XWhitelistTabCompleter(plugin, configManager, mWhitelistManager));
+    public static void loadCommands() {
+        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setExecutor(new XWhitelistCommand(plugin));
+        Objects.requireNonNull(plugin.getCommand("xwhitelist")).setTabCompleter(new XWhitelistTabCompleter(plugin));
         if (plugin.getCommand("xwhitelist") == null) {
             plugin.getLogger().severe("❌ Error: xWhitelist command is no registered in plugin.yml");
         }
     }
-    public void loadListeners() {
-        plugin.getServer().getPluginManager().registerEvents(new PlayerLoginListener(plugin, configManager, chatUtils), plugin);
+    public static void loadListeners() {
+        plugin.getServer().getPluginManager().registerEvents(new PlayerLoginListener(plugin), plugin);
     }
-    public void loadConfigFiles() {
-        plugin.config = plugin.getConfig();
+    public static void loadConfigFiles() {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
-        mWhitelistManager.loadConfig();
-        configManager.loadWhitelistFile();
-        configManager.setMessagesConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "messages.yml")));
-        configManager.loadMaintenanceWhitelist();
-        configManager.reloadMessages();
+        MWhitelistManager.loadConfig();
+        ConfigManager.loadWhitelistFile();
+        ConfigManager.setMessagesConfig(YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "messages.yml")));
+        ConfigManager.loadMaintenanceWhitelist();
+        ConfigManager.reloadMessages();
     }
 }

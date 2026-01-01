@@ -15,13 +15,9 @@ import java.util.List;
 public class XWhitelistTabCompleter implements TabCompleter {
 
     private final XWhitelist plugin;
-    private final ConfigManager configManager;
-    private final MWhitelistManager mWhitelistManager;
 
-    public XWhitelistTabCompleter(XWhitelist plugin, ConfigManager configManager, MWhitelistManager mWhitelistManager) {
+    public XWhitelistTabCompleter(XWhitelist plugin) {
         this.plugin = plugin;
-        this.configManager = configManager;
-        this.mWhitelistManager = mWhitelistManager;
     }
 
     @Override
@@ -64,7 +60,6 @@ public class XWhitelistTabCompleter implements TabCompleter {
     }
 
 
-    // Obtiene una lista de todos los jugadores conectados
     private List<String> getAllPlayerNames() {
         List<String> playerNames = new ArrayList<>();
         for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
@@ -73,29 +68,22 @@ public class XWhitelistTabCompleter implements TabCompleter {
         return playerNames;
     }
 
-    // Obtiene los jugadores que están en la whitelist (dependiendo de si MySQL está habilitado o no)
     private List<String> getWhitelistPlayers() {
         List<String> whitelistPlayers;
-
-        // Si MySQL está habilitado, obtenemos los jugadores de la base de datos
-        if (plugin.isMySQLEnabled()) {
+        if (XWhitelist.isMySQLEnabled()) {
             whitelistPlayers = getWhitelistPlayersFromDatabase();
         } else {
-            // Si no está habilitado, obtenemos los jugadores desde el archivo "whitelist.yml"
-            whitelistPlayers = configManager.getWhitelistConfig().getStringList("whitelist");
+            whitelistPlayers = ConfigManager.getWhitelistConfig().getStringList("whitelist");
         }
 
         return whitelistPlayers;
     }
 
-    // Obtiene los jugadores de la whitelist desde la base de datos MySQL
     private List<String> getWhitelistPlayersFromDatabase() {
         List<String> whitelistPlayers = new ArrayList<>();
         try {
-            // Aquí haces la consulta SQL para obtener los jugadores de la whitelist
-            // Asegúrate de que el nombre de la tabla y la columna coincidan con tu base de datos
-            String query = "SELECT player_name FROM whitelist";
-            var statement = plugin.getConnection().createStatement();
+            String query = "SELECT username FROM whitelist";
+            var statement = XWhitelist.getConnection().createStatement();
             var resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
@@ -107,6 +95,6 @@ public class XWhitelistTabCompleter implements TabCompleter {
         return whitelistPlayers;
     }
     private List<String> getMaintenanceWhitelistPlayers() {
-        return mWhitelistManager.getConfig().getStringList("whitelist");
+        return MWhitelistManager.getConfig().getStringList("whitelist");
     }
 }

@@ -9,20 +9,19 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigManager {
-    private final XWhitelist plugin;
-    private File maintenanceWhitelistFile;
-    private FileConfiguration maintenanceWhitelistConfig;
-    private File whitelistFile;
-    private FileConfiguration whitelistConfig;
-    private FileConfiguration messagesConfig;
-    private String prefix;
+    private static XWhitelist plugin;
+    private static File maintenanceWhitelistFile;
+    private static FileConfiguration maintenanceWhitelistConfig;
+    private static File whitelistFile;
+    private static FileConfiguration whitelistConfig;
+    private static FileConfiguration messagesConfig;
 
-    public ConfigManager(XWhitelist plugin) {
-        this.plugin = plugin;
+    public static void init(XWhitelist plugin) {
+        ConfigManager.plugin = plugin;
     }
 
-    public void loadMaintenanceWhitelist() {
-        maintenanceWhitelistFile = new File(plugin.getDataFolder(), "maintenance_whitelist.yml"); // Usar la variable de instancia
+    public static void loadMaintenanceWhitelist() {
+        maintenanceWhitelistFile = new File(plugin.getDataFolder(), "maintenance_whitelist.yml");
 
         if (!maintenanceWhitelistFile.exists()) {
             plugin.saveResource("maintenance_whitelist.yml", false);
@@ -34,12 +33,12 @@ public class ConfigManager {
         setMaintenanceWhitelistConfig(YamlConfiguration.loadConfiguration(maintenanceWhitelistFile));
     }
 
-    public void reloadMaintenanceWhitelist() {
+    public static void reloadMaintenanceWhitelist() {
         setMaintenanceWhitelistConfig(YamlConfiguration.loadConfiguration(getMaintenanceWhitelistFile()));
         plugin.getLogger().info("🔄 maintenance-whitelist.yml was reloaded successfully.");
     }
 
-    public void saveMaintenanceWhitelist() {
+    public static void saveMaintenanceWhitelist() {
         try {
             getMaintenanceWhitelistConfig().save(getMaintenanceWhitelistFile());
             plugin.getLogger().info("✅ maintenance_whitelist.yml saved successfully.");
@@ -47,7 +46,7 @@ public class ConfigManager {
             plugin.getLogger().severe("❌ Failed to save maintenance_whitelist.yml: " + e.getMessage());
         }
     }
-    public void loadWhitelistFile() {
+    public static void loadWhitelistFile() {
         whitelistFile = new File(plugin.getDataFolder(), "whitelist.yml"); // Usar la variable de instancia
 
         if (!whitelistFile.exists()) {
@@ -60,7 +59,7 @@ public class ConfigManager {
         whitelistConfig = YamlConfiguration.loadConfiguration(whitelistFile);
     }
 
-    public void saveWhitelistFile() {
+    public static void saveWhitelistFile() {
         try {
             getWhitelistConfig().save(getWhitelistFile());
             plugin.getLogger().info("✅ whitelist.yml saved successfully.");
@@ -69,14 +68,14 @@ public class ConfigManager {
         }
     }
 
-    public FileConfiguration getWhitelistConfig() {
+    public static FileConfiguration getWhitelistConfig() {
         return whitelistConfig;
     }
-    public FileConfiguration getMaintenanceWhitelistConfig() {
+    public static FileConfiguration getMaintenanceWhitelistConfig() {
         return maintenanceWhitelistConfig;
     }
 
-    public void reloadMessages() {
+    public static void reloadMessages() {
         File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
 
         if (!messagesFile.exists()) {
@@ -85,53 +84,31 @@ public class ConfigManager {
         } else {
             plugin.getLogger().info("✅ The messages.yml file has been loaded successfully.");
         }
-        setPrefix(ChatUtils.formatColor(getMessagesConfig().getString("prefix", "#ff177c&lx&r&lWhitelist &cDefault Prefix &8»&r")));
+        XWhitelist.prefix = ChatUtils.formatColor(getMessagesConfig().getString("prefix", "#ff177c&lx&r&lWhitelist &cDefault Prefix &8»&r"));
         setMessagesConfig(YamlConfiguration.loadConfiguration(messagesFile));
     }
 
-    public void reloadPluginConfig() {
-        // Reload main configuration
+    public static void reloadPluginConfig() {
         plugin.reloadConfig();
-        plugin.config = plugin.getConfig();
-
-        // Reload the maintenance whitelist configuration
         loadMaintenanceWhitelist();
-
         plugin.getLogger().info("✅ The configuration has been reloaded.");
     }
-    public FileConfiguration getMessageConfig() {
+    public static FileConfiguration getMessageConfig() {
         return getMessagesConfig();
     }
-
-    public File getWhitelistFile() {
+    public static File getWhitelistFile() {
         return whitelistFile;
     }
-
-    public FileConfiguration getMessagesConfig() {
+    public static FileConfiguration getMessagesConfig() {
         return messagesConfig;
     }
-
-    public void setMessagesConfig(FileConfiguration messagesConfig) {
-        this.messagesConfig = messagesConfig;
+    public static void setMessagesConfig(FileConfiguration messagesConfig) {
+        ConfigManager.messagesConfig = messagesConfig;
     }
-
-    public void setMaintenanceWhitelistConfig(FileConfiguration maintenanceWhitelistConfig) {
-        this.maintenanceWhitelistConfig = maintenanceWhitelistConfig;
+    public static void setMaintenanceWhitelistConfig(FileConfiguration maintenanceWhitelistConfig) {
+        ConfigManager.maintenanceWhitelistConfig = maintenanceWhitelistConfig;
     }
-
-    public File getMaintenanceWhitelistFile() {
+    public static File getMaintenanceWhitelistFile() {
         return maintenanceWhitelistFile;
-    }
-
-    public void setMaintenanceWhitelistFile(File maintenanceWhitelistFile) {
-        this.maintenanceWhitelistFile = maintenanceWhitelistFile;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
     }
 }

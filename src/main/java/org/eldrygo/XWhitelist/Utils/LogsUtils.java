@@ -4,39 +4,40 @@ import org.bukkit.Bukkit;
 import org.eldrygo.XWhitelist.XWhitelist;
 
 public class LogsUtils {
-    private final XWhitelist plugin;
+    private static XWhitelist plugin;
 
-    public LogsUtils(XWhitelist plugin) {
-        this.plugin = plugin;
+    public static void init(XWhitelist plugin) {
+        LogsUtils.plugin = plugin;
     }
-    public void sendRunMessage() {
+
+    public static void sendRunMessage() {
         if (plugin.getConfig().getBoolean("plugin.first_run", true)) {
             onFirstRun();
             plugin.getConfig().set("plugin.first_run", false);
             plugin.saveConfig();
         } else {
-            if (plugin.useMySQL) {
+            if (XWhitelist.useMySQL) {
                 startWithMySQL();
             } else {
                 startOffline();
             }
         }
     }
-    public void sendStartupMessage() {
+    public static void sendStartupMessage() {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#ff177c&lx&r&lWhitelist #a0ff72plugin enabled!"));
-        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dVersion: #ffffff" + plugin.version));
+        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dVersion: #ffffff" + XWhitelist.version));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dDeveloped by: #ffffff" + String.join(", ", plugin.getDescription().getAuthors())));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
     }
-    public void sendShutdownMessage() {
+    public static void sendShutdownMessage() {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#ff177c&lx&r&lWhitelist #ff7272plugin disabled!"));
-        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dVersion: #ffffff" + plugin.version));
+        Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dVersion: #ffffff" + XWhitelist.version));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dDeveloped by: #ffffff" + String.join(", ", plugin.getDescription().getAuthors())));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
     }
-    public void onFirstRun() {
+    public static void onFirstRun() {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("                         #ff177c&lx&r&lWhitelist"));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dHi, since this is the first time you've started the server, the plugin"));
@@ -45,7 +46,7 @@ public class LogsUtils {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#ffffff  You can find a guide for the plugin in the modrinth/spigot page."));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
     }
-    public void startWithMySQL() {
+    public static void startWithMySQL() {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("                         #ff177c&lx&r&lWhitelist"));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dHi, now you are using the whitelist with the MySQL feature, that means"));
@@ -54,7 +55,7 @@ public class LogsUtils {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#ffffffYou disable the MySQL feature in the config, on the file config.yml"));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
     }
-    public void startOffline() {
+    public static void startOffline() {
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor(" "));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("                         #ff177c&lx&r&lWhitelist"));
         Bukkit.getConsoleSender().sendMessage(ChatUtils.formatColor("#fff18dHi, now you are using the whitelist on the offline mode, that means"));
